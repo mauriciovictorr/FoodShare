@@ -14,17 +14,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// Middleware global: disponibiliza res.locals.user para todas as views EJS
+// Middleware global: disponibiliza res.locals.usuario para todas as views EJS
 app.use((req, res, next) => {
   const token = req.cookies?.token;
   if (token) {
     try {
-      res.locals.user = jwt.verify(token, process.env.JWT_SECRET);
+      res.locals.usuario = jwt.verify(token, process.env.JWT_SECRET);
     } catch {
-      res.locals.user = null;
+      res.locals.usuario = null;
     }
   } else {
-    res.locals.user = null;
+    res.locals.usuario = null;
   }
   next();
 });

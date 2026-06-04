@@ -49,7 +49,7 @@ async function register(req, res) {
   const { nome, email, senha, telefone, role } = result.data;
 
   try {
-    const existingUser = await prisma.user.findUnique({ where: { email } });
+    const existingUser = await prisma.usuario.findUnique({ where: { email } });
     if (existingUser) {
       return res.status(400).render('auth/register', {
         title: 'Criar Conta - FoodShare',
@@ -60,7 +60,7 @@ async function register(req, res) {
 
     const senhaHash = await bcrypt.hash(senha, SALT_ROUNDS);
 
-    await prisma.user.create({
+    await prisma.usuario.create({
       data: { nome, email, senha: senhaHash, telefone, role },
     });
 
@@ -98,8 +98,8 @@ async function login(req, res) {
   const { email, senha } = result.data;
 
   try {
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) {
+    const usuario = await prisma.usuario.findUnique({ where: { email } });
+    if (!usuario) {
       return res.status(401).render('auth/login', {
         title: 'Entrar - FoodShare',
         errors: [{ field: 'email', message: 'E-mail ou senha incorretos' }],
@@ -108,7 +108,7 @@ async function login(req, res) {
       });
     }
 
-    const senhaValida = await bcrypt.compare(senha, user.senha);
+    const senhaValida = await bcrypt.compare(senha, usuario.senha);
     if (!senhaValida) {
       return res.status(401).render('auth/login', {
         title: 'Entrar - FoodShare',
@@ -118,14 +118,14 @@ async function login(req, res) {
       });
     }
 
-    const payload = { id: user.id, nome: user.nome, email: user.email, role: user.role };
+    const payload = { id: usuario.id, nome: usuario.nome, email: usuario.email, role: usuario.role };
     const accessToken = generateAccessToken(payload);
-    const refreshToken = generateRefreshToken({ id: user.id });
+    const refreshToken = generateRefreshToken({ id: usuario.id });
 
     await prisma.refreshToken.create({
       data: {
         token: refreshToken,
-        userId: user.id,
+        usuarioId: usuario.id,
         expiresAt: new Date(Date.now() + REFRESH_TOKEN_EXPIRY_MS),
       },
     });
@@ -156,7 +156,7 @@ async function refresh(req, res) {
 
     const storedToken = await prisma.refreshToken.findUnique({
       where: { token: refreshTokenCookie },
-      include: { user: true },
+      include: { usuario: true },
     });
 
     if (!storedToken || storedToken.expiresAt < new Date()) {
@@ -165,8 +165,8 @@ async function refresh(req, res) {
       return res.status(401).json({ message: 'Refresh token inválido ou expirado' });
     }
 
-    const { user } = storedToken;
-    const payload = { id: user.id, nome: user.nome, email: user.email, role: user.role };
+    const { usuario } = storedToken;
+    const payload = { id: usuario.id, nome: usuario.nome, email: usuario.email, role: usuario.role };
     const newAccessToken = generateAccessToken(payload);
 
     const isProduction = process.env.NODE_ENV === 'production';
