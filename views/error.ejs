@@ -1,4 +1,4 @@
-<%- include('partials/base', { body: `
+<%- include('partials/header') %>
 <div class="error-page">
   <div class="error-card">
     <span class="error-icon"><%= error && error.status === 403 ? '🚫' : '⚠️' %></span>
@@ -7,4 +7,4 @@
     <a href="/" class="btn-primary">Voltar ao início</a>
   </div>
 </div>
-`) %>
+<%- include('partials/footer') %>
