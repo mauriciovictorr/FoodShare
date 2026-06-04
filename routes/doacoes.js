@@ -13,8 +13,8 @@ router.post('/nova', authenticate, authorize(['doador', 'admin']), (req, res) =>
   res.redirect('/doacoes');
 });
 
-// Listagem pública de doações
-router.get('/', (req, res) => {
+// Listagem de doações (agora protegida)
+router.get('/', authenticate, (req, res) => {
   res.render('doacoes/index', { title: 'Doações - FoodShare' });
 });
 

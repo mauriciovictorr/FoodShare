@@ -3,8 +3,10 @@
     <a href="/" class="nav-brand">🤝 FoodShare</a>
 
     <ul class="nav-links">
-      <li><a href="/doacoes">Doações</a></li>
-      <li><a href="/solicitacoes">Solicitações</a></li>
+      <% if (locals.usuario) { %>
+        <li><a href="/doacoes">Doações</a></li>
+        <li><a href="/solicitacoes">Solicitações</a></li>
+      <% } %>
     </ul>
 
     <div class="nav-auth">

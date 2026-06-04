@@ -12,8 +12,8 @@ router.post('/nova', authenticate, authorize(['receptor', 'admin']), (req, res) 
   res.redirect('/solicitacoes');
 });
 
-// Listagem pública de solicitações
-router.get('/', (req, res) => {
+// Listagem de solicitações (agora protegida)
+router.get('/', authenticate, (req, res) => {
   res.render('solicitacoes/index', { title: 'Solicitações - FoodShare' });
 });
 
