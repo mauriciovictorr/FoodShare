@@ -7,8 +7,8 @@ const registerSchema = z.object({
   telefone: z
     .string()
     .regex(/^\(?\d{2}\)?[\s-]?\d{4,5}[\s-]?\d{4}$/, 'Telefone inválido. Use o formato (11) 91234-5678'),
-  role: z.enum(['doador', 'beneficiario'], {
-    errorMap: () => ({ message: "Role deve ser 'doador' ou 'beneficiario'" }),
+  role: z.enum(['doador', 'receptor'], {
+    errorMap: () => ({ message: "Role deve ser 'doador' ou 'receptor'" }),
   }),
 });
 

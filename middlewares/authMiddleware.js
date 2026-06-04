@@ -5,7 +5,7 @@ const prisma = require('../config/database');
  * Middleware de autenticação.
  * Lê o Access Token do cookie `token`, valida com JWT_SECRET.
  * Se expirado, tenta renovar silenciosamente usando o Refresh Token.
- * Popula `req.user` com os dados do usuário autenticado.
+ * Popula `req.usuario` com os dados do usuário autenticado.
  */
 async function authenticate(req, res, next) {
   const accessToken = req.cookies?.token;
@@ -14,7 +14,7 @@ async function authenticate(req, res, next) {
   if (accessToken) {
     try {
       const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
-      req.user = decoded;
+      req.usuario = decoded;
       return next();
     } catch (err) {
       if (err.name !== 'TokenExpiredError') {
@@ -35,7 +35,7 @@ async function authenticate(req, res, next) {
 
     const storedToken = await prisma.refreshToken.findUnique({
       where: { token: refreshTokenCookie },
-      include: { user: true },
+      include: { usuario: true },
     });
 
     if (!storedToken || storedToken.expiresAt < new Date()) {
@@ -44,8 +44,8 @@ async function authenticate(req, res, next) {
       return res.redirect('/auth/login');
     }
 
-    const { user } = storedToken;
-    const payload = { id: user.id, nome: user.nome, email: user.email, role: user.role };
+    const { usuario } = storedToken;
+    const payload = { id: usuario.id, nome: usuario.nome, email: usuario.email, role: usuario.role };
 
     const newAccessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '15m' });
 
@@ -57,7 +57,7 @@ async function authenticate(req, res, next) {
       maxAge: 15 * 60 * 1000,
     });
 
-    req.user = payload;
+    req.usuario = payload;
     return next();
   } catch (err) {
     res.clearCookie('token');
@@ -72,10 +72,10 @@ async function authenticate(req, res, next) {
  */
 function authorize(allowedRoles) {
   return (req, res, next) => {
-    if (!req.user) {
+    if (!req.usuario) {
       return res.redirect('/auth/login');
     }
-    if (!allowedRoles.includes(req.user.role)) {
+    if (!allowedRoles.includes(req.usuario.role)) {
       return res.status(403).render('error', {
         message: 'Acesso negado. Você não tem permissão para acessar este recurso.',
         error: { status: 403 },

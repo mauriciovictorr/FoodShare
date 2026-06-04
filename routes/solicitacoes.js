@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const { authenticate, authorize } = require('../middlewares/authMiddleware');
 
-// Apenas beneficiários e admins podem criar solicitações
-router.get('/nova', authenticate, authorize(['beneficiario', 'admin']), (req, res) => {
+// Apenas receptores e admins podem criar solicitações
+router.get('/nova', authenticate, authorize(['receptor', 'admin']), (req, res) => {
   res.render('solicitacoes/nova', { title: 'Nova Solicitação - FoodShare' });
 });
 
-router.post('/nova', authenticate, authorize(['beneficiario', 'admin']), (req, res) => {
+router.post('/nova', authenticate, authorize(['receptor', 'admin']), (req, res) => {
   // TODO: implementar criação de solicitação
   res.redirect('/solicitacoes');
 });
