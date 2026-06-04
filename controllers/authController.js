@@ -38,7 +38,7 @@ async function register(req, res) {
   const result = registerSchema.safeParse(req.body);
 
   if (!result.success) {
-    const errors = result.error.errors.map((e) => ({ field: e.path[0], message: e.message }));
+    const errors = result.error.issues.map((e) => ({ field: e.path[0], message: e.message }));
     return res.status(400).render('auth/register', {
       title: 'Criar Conta - FoodShare',
       errors,
@@ -86,7 +86,7 @@ async function login(req, res) {
   const result = loginSchema.safeParse(req.body);
 
   if (!result.success) {
-    const errors = result.error.errors.map((e) => ({ field: e.path[0], message: e.message }));
+    const errors = result.error.issues.map((e) => ({ field: e.path[0], message: e.message }));
     return res.status(400).render('auth/login', {
       title: 'Entrar - FoodShare',
       errors,
