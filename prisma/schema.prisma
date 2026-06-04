@@ -6,13 +6,13 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
+model Usuario {
   id            String         @id @default(uuid())
   nome          String
   email         String         @unique
   senha         String
   telefone      String
-  role          String         @default("doador") // doador, beneficiario, admin
+  role          String         @default("doador") // doador, receptor, admin
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   refreshTokens RefreshToken[]
@@ -21,8 +21,8 @@ model User {
 model RefreshToken {
   id        String   @id @default(uuid())
   token     String   @unique
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  usuarioId String
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   expiresAt DateTime
   createdAt DateTime @default(now())
 }
