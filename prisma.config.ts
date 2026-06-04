@@ -4,12 +4,15 @@ import { PrismaPg } from "@prisma/adapter-pg";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
+  datasource: {
+    url: process.env.DIRECT_URL || process.env.DATABASE_URL,
+  },
   migrations: {
     path: "prisma/migrations",
   },
   migrate: {
     adapter: () => {
-      return new PrismaPg({ connectionString: process.env.DATABASE_URL });
+      return new PrismaPg({ connectionString: process.env.DIRECT_URL || process.env.DATABASE_URL });
     },
   },
 });
