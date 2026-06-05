@@ -28,6 +28,14 @@ function setCookies(res, accessToken, refreshToken) {
   res.cookie('refreshToken', refreshToken, { ...cookieOptions, maxAge: REFRESH_TOKEN_EXPIRY_MS });
 }
 
+// GET /auth — tela inicial de boas-vindas
+async function showWelcome(req, res) {
+  if (res.locals.usuario) {
+    return res.redirect('/');
+  }
+  res.render('auth/welcome', { title: 'FoodShare' });
+}
+
 // GET /auth/register
 async function showRegister(req, res) {
   res.render('auth/register', { title: 'Criar Conta - FoodShare', errors: [], old: {} });
@@ -53,7 +61,7 @@ async function register(req, res) {
     if (existingUser) {
       return res.status(400).render('auth/register', {
         title: 'Criar Conta - FoodShare',
-        errors: [{ field: 'email', message: 'Este e-mail já está cadastrado' }],
+        errors: [{ field: 'email', message: 'Este e-mail já está em uso. Faça login ou use outro endereço.' }],
         old: req.body,
       });
     }
@@ -69,7 +77,7 @@ async function register(req, res) {
     console.error('[register] Erro:', err);
     res.status(500).render('auth/register', {
       title: 'Criar Conta - FoodShare',
-      errors: [{ field: null, message: 'Erro interno. Tente novamente.' }],
+      errors: [{ field: null, message: 'Não conseguimos concluir agora. Tente novamente em instantes.' }],
       old: req.body,
     });
   }
@@ -102,7 +110,10 @@ async function login(req, res) {
     if (!usuario) {
       return res.status(401).render('auth/login', {
         title: 'Entrar - FoodShare',
-        errors: [{ field: 'email', message: 'E-mail ou senha incorretos' }],
+        errors: [
+          { field: 'email', message: 'E-mail ou senha incorretos. Confira os dados e tente novamente.' },
+          { field: 'senha', message: 'E-mail ou senha incorretos. Confira os dados e tente novamente.' },
+        ],
         old: req.body,
         registered: false,
       });
@@ -112,7 +123,10 @@ async function login(req, res) {
     if (!senhaValida) {
       return res.status(401).render('auth/login', {
         title: 'Entrar - FoodShare',
-        errors: [{ field: 'email', message: 'E-mail ou senha incorretos' }],
+        errors: [
+          { field: 'email', message: 'E-mail ou senha incorretos. Confira os dados e tente novamente.' },
+          { field: 'senha', message: 'E-mail ou senha incorretos. Confira os dados e tente novamente.' },
+        ],
         old: req.body,
         registered: false,
       });
@@ -136,7 +150,7 @@ async function login(req, res) {
     console.error('[login] Erro:', err);
     res.status(500).render('auth/login', {
       title: 'Entrar - FoodShare',
-      errors: [{ field: null, message: 'Erro interno. Tente novamente.' }],
+      errors: [{ field: null, message: 'Não conseguimos concluir agora. Tente novamente em instantes.' }],
       old: req.body,
       registered: false,
     });
@@ -202,4 +216,4 @@ async function logout(req, res) {
   res.redirect('/');
 }
 
-module.exports = { showRegister, register, showLogin, login, refresh, logout };
+module.exports = { showWelcome, showRegister, register, showLogin, login, refresh, logout };
