@@ -1,0 +1,42 @@
+<% if (typeof modal !== 'undefined' && modal) { %>
+<div
+  class="feedback-modal-overlay is-open"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="feedback-modal-title"
+  aria-describedby="feedback-modal-description"
+>
+  <div class="feedback-modal feedback-modal--<%= modal.variant || 'error' %>">
+    <div class="feedback-modal__icon-wrap feedback-modal__icon-wrap--<%= modal.variant || 'error' %>">
+      <% if (modal.variant === 'error') { %>
+        <img src="/images/auth/hand-icon.svg" alt="" class="feedback-modal__icon">
+      <% } %>
+    </div>
+
+    <div class="feedback-modal__content">
+      <h3 id="feedback-modal-title" class="feedback-modal__title"><%= modal.title %></h3>
+      <% if (modal.description) { %>
+        <p id="feedback-modal-description" class="feedback-modal__description<%= modal.items && modal.items.length ? ' feedback-modal__description--intro' : '' %>"><%= modal.description %></p>
+      <% } %>
+      <% if (modal.items && modal.items.length) { %>
+        <ul class="feedback-modal__list" aria-label="Detalhes dos erros">
+          <% modal.items.forEach(function (item) { %>
+            <li><%= item %></li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </div>
+
+    <div class="feedback-modal__actions<%= modal.secondaryLabel ? '' : ' feedback-modal__actions--single' %>">
+      <% if (modal.secondaryLabel) { %>
+        <button type="button" class="feedback-modal__btn feedback-modal__btn--secondary" data-feedback-modal-close>
+          <%= modal.secondaryLabel %>
+        </button>
+      <% } %>
+      <button type="button" class="feedback-modal__btn feedback-modal__btn--primary" data-feedback-modal-close>
+        <%= modal.primaryLabel || 'Entendi' %>
+      </button>
+    </div>
+  </div>
+</div>
+<% } %>
