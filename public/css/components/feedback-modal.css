@@ -1,0 +1,233 @@
+/* Modal de feedback (Figma 90:371) */
+
+body.feedback-modal-open {
+  overflow: hidden;
+}
+
+.feedback-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(18, 18, 18, 0.45);
+  backdrop-filter: blur(2px);
+}
+
+.feedback-modal-overlay.is-open {
+  display: flex;
+}
+
+.feedback-modal {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 28px;
+  padding: 32px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 20px 60px rgba(18, 18, 18, 0.2);
+  animation: feedbackModalIn 280ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes feedbackModalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.feedback-modal__icon-wrap {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.feedback-modal__icon-wrap--error {
+  background: #faeeda;
+}
+
+.feedback-modal-overlay.is-open .feedback-modal--error .feedback-modal__icon-wrap {
+  animation: feedbackIconShake 0.75s cubic-bezier(0.36, 0, 0.2, 1) 0.35s 1 both;
+}
+
+@keyframes feedbackIconShake {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  20% {
+    transform: rotate(-2.5deg) scale(1.015);
+  }
+  40% {
+    transform: rotate(2.5deg) scale(1.015);
+  }
+  60% {
+    transform: rotate(-1.5deg) scale(1.008);
+  }
+  80% {
+    transform: rotate(1deg) scale(1);
+  }
+}
+
+.feedback-modal__icon {
+  display: block;
+  width: 36px;
+  height: 38px;
+}
+
+.feedback-modal__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  text-align: center;
+}
+
+.feedback-modal__title {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--auth-text);
+}
+
+.feedback-modal__description {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #888780;
+  max-width: 100%;
+}
+
+.feedback-modal__description--intro {
+  margin-bottom: 4px;
+}
+
+.feedback-modal__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.feedback-modal__list li {
+  position: relative;
+  padding: 6px 0 6px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: #888780;
+}
+
+.feedback-modal__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 13px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--auth-green);
+}
+
+.feedback-modal__actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.feedback-modal__actions--single .feedback-modal__btn--primary {
+  flex: 1;
+}
+
+.feedback-modal__btn {
+  flex: 1;
+  min-height: 48px;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.feedback-modal__btn:active {
+  transform: scale(0.98);
+}
+
+.feedback-modal__btn--secondary {
+  background: var(--auth-panel);
+  color: rgba(26, 26, 26, 0.7);
+}
+
+.feedback-modal__btn--secondary:hover {
+  background: #e4ebe8;
+}
+
+.feedback-modal__btn--primary {
+  background: var(--auth-green);
+  color: #fff;
+}
+
+.feedback-modal__btn--primary:hover {
+  background: #178a66;
+}
+
+@media (max-width: 960px) {
+  .feedback-modal-overlay {
+    padding: 0;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: stretch;
+  }
+
+  .feedback-modal {
+    width: 100%;
+    max-width: none;
+    border-radius: 28px 28px 0 0;
+    padding: 28px 24px calc(32px + env(safe-area-inset-bottom, 0px));
+    margin: 0;
+  }
+
+  .feedback-modal__title {
+    font-size: 20px;
+  }
+
+  .feedback-modal__description {
+    font-size: 14px;
+  }
+
+  .feedback-modal__btn {
+    min-height: 52px;
+    font-size: 15px;
+    border-radius: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feedback-modal {
+    animation: none;
+  }
+
+  .feedback-modal-overlay.is-open .feedback-modal--error .feedback-modal__icon-wrap {
+    animation: none;
+  }
+}

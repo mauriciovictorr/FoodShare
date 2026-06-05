@@ -1,0 +1,4 @@
+<% const hint = (typeof errors !== 'undefined' ? errors : []).find(function (e) { return e.field === field; }); %>
+<% if (hint) { %>
+<span class="auth-field__hint auth-field__hint--error" id="<%= field %>-hint" role="alert"><%= hint.message %></span>
+<% } %>
