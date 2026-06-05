@@ -2,11 +2,13 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+const { buildAuthFeedback } = require('./utils/feedbackErrors');
 const app = express();
 
 // View engine setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.locals.buildAuthFeedback = buildAuthFeedback;
 
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
@@ -36,7 +38,10 @@ const solicitacoesRoutes = require('./routes/solicitacoes');
 
 // Home route
 app.get('/', (req, res) => {
-  res.render('index', { title: 'FoodShare' });
+  if (res.locals.usuario) {
+    return res.render('index', { title: 'FoodShare' });
+  }
+  res.redirect('/auth');
 });
 
 app.use('/auth', authRoutes);
