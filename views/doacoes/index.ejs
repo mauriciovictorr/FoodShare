@@ -2,10 +2,7 @@
 
 <div class="app-page">
   <% if (isDoador) { %>
-    <%- include('../partials/app-page-header', {
-      actionLabel: 'Nova doação',
-      actionModal: true
-    }) %>
+    <%- include('../partials/app-page-header') %>
 
     <article class="app-page-panel">
       <% if (itens.length === 0) { %>

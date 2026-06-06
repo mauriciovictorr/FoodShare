@@ -104,6 +104,8 @@ router.get('/', authenticate, async (req, res) => {
         pageHeadingPrefix: 'Aqui ficam suas',
         pageHeadingHighlight: 'doações',
         pageSubtitle: 'Gerencie os itens que você publicou e acompanhe validade e status.',
+        headerActionLabel: 'Nova doação',
+        headerActionModal: true,
         openDoacaoModal: req.query.nova === '1',
         ...data,
       });
@@ -153,6 +155,8 @@ router.post('/nova', authenticate, authorize(['doador', 'admin']), async (req, r
         pageHeadingPrefix: 'Aqui ficam suas',
         pageHeadingHighlight: 'doações',
         pageSubtitle: 'Gerencie os itens que você publicou e acompanhe validade e status.',
+        headerActionLabel: 'Nova doação',
+        headerActionModal: true,
         openDoacaoModal: true,
         doacaoErrors: errors,
         doacaoOld: req.body,

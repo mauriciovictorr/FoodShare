@@ -89,6 +89,43 @@
   flex-shrink: 0;
 }
 
+/* CTA compacto no header — desktop */
+.app-header__action {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .home-header__actions .app-header__action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: var(--app-icon-header);
+    padding: 0 14px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--green-mid);
+    color: #fff;
+    font-family: inherit;
+    font-size: var(--app-fs-base);
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: opacity var(--duration-normal) var(--ease-out);
+  }
+
+  .app-header__action:hover {
+    opacity: 0.92;
+  }
+
+  .app-header__action .app-svg-icon {
+    width: 12px;
+    height: 9px;
+  }
+}
+
 .home-icon-btn {
   display: flex;
   align-items: center;
@@ -193,11 +230,10 @@
 }
 
 .home-hero-card__btn .app-icon,
+.home-hero-card__btn .app-svg-icon,
 .home-hero-card__btn img {
   display: block;
   flex-shrink: 0;
-  font-size: 18px;
-  color: currentColor;
 }
 
 .home-hero-card__btn:hover {
@@ -206,6 +242,7 @@
 
 button.home-hero-card__btn,
 button.app-page-header__btn,
+button.app-header__action,
 button.home-empty-state__btn {
   border: none;
   cursor: pointer;
@@ -249,16 +286,9 @@ button.home-empty-state__btn {
 }
 
 .home-metric-card__icon .app-icon,
+.home-metric-card__icon .app-svg-icon,
 .home-metric-card__icon img {
   display: block;
-}
-
-.home-metric-card__icon--green .app-icon {
-  color: var(--green-mid);
-}
-
-.home-metric-card__icon--amber .app-icon {
-  color: #c47a14;
 }
 
 .home-metric-card__icon--green {
@@ -338,9 +368,9 @@ button.home-empty-state__btn {
 }
 
 .home-panel__action .app-icon,
+.home-panel__action .app-svg-icon,
 .home-panel__action img {
   display: block;
-  color: var(--green-mid);
 }
 
 /* ── Empty state (estilo modal) ── */

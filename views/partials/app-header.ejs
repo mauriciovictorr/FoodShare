@@ -46,6 +46,15 @@
 
     <div class="home-header__actions">
 
+      <% if (typeof headerActionLabel !== 'undefined' && headerActionLabel) { %>
+        <%- include('app-header-action', {
+          actionLabel: headerActionLabel,
+          actionHref: typeof headerActionHref !== 'undefined' ? headerActionHref : undefined,
+          actionModal: typeof headerActionModal !== 'undefined' ? headerActionModal : false,
+          buttonClass: 'app-header__action',
+        }) %>
+      <% } %>
+
       <button
 
         type="button"

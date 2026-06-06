@@ -7,10 +7,20 @@
   width: 100%;
 }
 
-/* ── Cabeçalho de página — só toolbar de ações ── */
+/* ── Cabeçalho de página — toolbar mobile (desktop: CTA no app-header) ── */
 .app-page-toolbar {
   display: flex;
   justify-content: flex-end;
+}
+
+.app-page-toolbar--mobile {
+  display: flex;
+}
+
+@media (min-width: 1024px) {
+  .app-page-toolbar--mobile {
+    display: none;
+  }
 }
 
 .app-page-header {
@@ -53,11 +63,10 @@
 }
 
 .app-page-header__btn .app-icon,
+.app-page-header__btn .app-svg-icon,
 .app-page-header__btn img {
   display: block;
   flex-shrink: 0;
-  font-size: 18px;
-  color: currentColor;
 }
 
 .app-page-header__btn:hover {

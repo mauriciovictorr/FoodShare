@@ -1,22 +1,14 @@
 <%#
-  Barra de ações da página (sem título — fica no app-header).
-  Uso: include('partials/app-page-header', {
-    actionLabel: '...',
-    actionModal: true
-  })
+  Toolbar mobile — no desktop o CTA fica no app-header.
+  Locals: headerActionLabel, headerActionHref?, headerActionModal?
 %>
-<% if (typeof actionLabel !== 'undefined') { %>
-<header class="app-page-toolbar">
-  <% if (typeof actionModal !== 'undefined' && actionModal) { %>
-    <button type="button" class="app-page-header__btn" data-doacao-modal-open>
-      <%= actionLabel %>
-      <%- include('app-icon', { icon: 'arrow_forward', size: 'arrow' }) %>
-    </button>
-  <% } else if (typeof actionHref !== 'undefined') { %>
-    <a href="<%= actionHref %>" class="app-page-header__btn">
-      <%= actionLabel %>
-      <%- include('app-icon', { icon: 'arrow_forward', size: 'arrow' }) %>
-    </a>
-  <% } %>
+<% if (typeof headerActionLabel !== 'undefined' && headerActionLabel) { %>
+<header class="app-page-toolbar app-page-toolbar--mobile">
+  <%- include('app-header-action', {
+    actionLabel: headerActionLabel,
+    actionHref: typeof headerActionHref !== 'undefined' ? headerActionHref : undefined,
+    actionModal: typeof headerActionModal !== 'undefined' ? headerActionModal : false,
+    buttonClass: 'app-page-header__btn',
+  }) %>
 </header>
 <% } %>
