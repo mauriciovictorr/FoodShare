@@ -3,6 +3,7 @@ const router = express.Router();
 const prisma = require('../config/database');
 const { authenticate, authorize } = require('../middlewares/authMiddleware');
 const { donationDisplayStatus, isExpired, mesAtual, categoryFilterKey } = require('../utils/formatTime');
+const { buildDoacoesDetalheMap } = require('../utils/doacaoDetail');
 
 function isApiRequest(req) {
   const contentType = req.headers['content-type'] || '';
@@ -75,7 +76,12 @@ async function getDoadorIndexData(userId) {
     }))
   );
 
-  return { isDoador: true, itens, doacoes };
+  return {
+    isDoador: true,
+    itens,
+    doacoes,
+    doacoesDetalhe: buildDoacoesDetalheMap(doacoes, { viewerRole: 'doador' }),
+  };
 }
 
 async function getReceptorIndexData(userId) {
@@ -152,6 +158,7 @@ async function getReceptorIndexData(userId) {
     isDoador: false,
     itens: [],
     doacoes,
+    doacoesDetalhe: buildDoacoesDetalheMap(doacoesRaw, { viewerRole: 'receptor' }),
     minhasSolicitacoes,
     totalSolicitadas,
     totalRecebidas,
@@ -446,4 +453,3 @@ router.post('/:id/editar', authenticate, authorize(['doador', 'admin']), async (
 });
 
 module.exports = router;
-

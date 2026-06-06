@@ -1,5 +1,6 @@
 const prisma = require('../config/database');
 const { mesAtual, donationDisplayStatus } = require('../utils/formatTime');
+const { buildDoacoesDetalheMap } = require('../utils/doacaoDetail');
 
 async function showHome(req, res) {
   const usuario = res.locals.usuario;
@@ -22,10 +23,11 @@ async function showHome(req, res) {
   };
   let doacoesAtivas = [];
   let solicitacoesRecebidas = [];
+  let doacoesDetalhe = {};
 
   try {
     if (isDoador) {
-      const [totalDoacoes, doacoesAtivasCount, pendentes, familiasAjudadas, itens] = await Promise.all([
+      const [totalDoacoes, doacoesAtivasCount, pendentes, familiasAjudadas, itens, doacoesFull] = await Promise.all([
         prisma.doacao.count({ where: { usuarioId: userId } }),
         prisma.doacao.count({
           where: {
@@ -57,6 +59,14 @@ async function showHome(req, res) {
           orderBy: { validade: 'asc' },
           take: 8,
         }),
+        prisma.doacao.findMany({
+          where: {
+            usuarioId: userId,
+            status: { in: ['disponivel', 'reservado'] },
+          },
+          include: { itens: { orderBy: { validade: 'asc' } } },
+          orderBy: { createdAt: 'desc' },
+        }),
       ]);
 
       const solicitacoes = await prisma.solicitacao.findMany({
@@ -81,6 +91,8 @@ async function showHome(req, res) {
         solicitacoesPendentes: pendentes,
       };
       doacoesAtivas = itens.map((item) => ({
+        id: item.id,
+        doacaoId: item.doacaoId,
         nome: item.nome,
         quantidade: item.quantidade,
         validade: item.validade,
@@ -89,6 +101,7 @@ async function showHome(req, res) {
           validade: item.validade,
         }),
       }));
+      doacoesDetalhe = buildDoacoesDetalheMap(doacoesFull, { viewerRole: 'doador' });
       solicitacoesRecebidas = solicitacoes.map((s) => ({
         ...s,
         itemLabel: s.doacao.itens[0]?.nome || 'Doação',
@@ -120,6 +133,7 @@ async function showHome(req, res) {
     stats,
     doacoesAtivas,
     solicitacoesRecebidas,
+    doacoesDetalhe,
     isDoador,
   });
 }
