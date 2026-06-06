@@ -44,24 +44,24 @@
     <div class="receptor-dashboard">
       <div class="receptor-dashboard__main">
         <div class="receptor-toolbar">
-          <label class="receptor-search">
-            <span class="receptor-search__icon" aria-hidden="true">
-              <%- include('../partials/app-icon', { icon: 'search', size: 'chevron' }) %>
+          <label class="app-search">
+            <span class="app-search__icon" aria-hidden="true">
+              <%- include('../partials/app-icon', { icon: 'search', size: 'header' }) %>
             </span>
             <input
               type="search"
-              class="receptor-search__input"
+              class="app-search__input"
               placeholder="Buscar alimentos disponíveis..."
               autocomplete="off"
               data-receptor-search
             >
           </label>
 
-          <div class="receptor-filters" role="group" aria-label="Filtrar por categoria">
+          <div class="app-filter-chips" role="group" aria-label="Filtrar por categoria">
             <% RECEPTOR_CATEGORY_FILTERS.forEach(function(cat, index) { %>
               <button
                 type="button"
-                class="receptor-filter-chip<%= index === 0 ? ' is-active' : '' %>"
+                class="app-filter-chip<%= index === 0 ? ' is-active' : '' %>"
                 data-receptor-filter="<%= cat.key %>"
               ><%= cat.label %></button>
             <% }); %>

@@ -36,6 +36,7 @@
   --bottom-nav-wrap-pad: 20px;
   --bottom-nav-height: calc(var(--bottom-nav-pill-height) + var(--bottom-nav-wrap-pad));
   --app-mobile-safe-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
+  --app-sticky-aside-top: 88px;
 
   /* App — tipografia (escala web, design.mdc) */
   --app-fs-xs: 11px;

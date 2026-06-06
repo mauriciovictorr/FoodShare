@@ -118,7 +118,7 @@
 
   function shouldIgnoreClick(target) {
     return Boolean(
-      target.closest('a, button, input, select, textarea, label, form, .home-table__edit, .receptor-food-card__btn')
+      target.closest('a, button, input, select, textarea, label, form, .home-table__edit, .receptor-food-card .app-btn-primary')
     );
   }
 

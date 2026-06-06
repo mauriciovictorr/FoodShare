@@ -31,19 +31,13 @@
     <%= formatCategoryLabel(item.categoria) %> · <%= item.quantidade %> un
   </p>
 
-  <ul class="receptor-food-card__meta">
-    <li>
-      <%- include('app-icon', { icon: 'calendar_today', size: 'chevron' }) %>
-      Val: <%= formatValidade(item.validade) %>
-    </li>
-    <li>
-      <%- include('app-icon', { icon: 'location_on', size: 'chevron' }) %>
-      <%= item.localizacao %>
-    </li>
-  </ul>
+  <div class="app-meta-tags">
+    <span class="app-meta-tag">Val. <%= formatValidade(item.validade) %></span>
+    <span class="app-meta-tag"><%= item.localizacao %></span>
+  </div>
 
   <div class="receptor-food-card__footer">
     <span class="receptor-food-card__donor"><%= item.doadorNome %></span>
-    <a href="/solicitacoes/nova?doacaoId=<%= item.doacaoId %>" class="receptor-food-card__btn">Solicitar</a>
+    <a href="/solicitacoes/nova?doacaoId=<%= item.doacaoId %>" class="app-btn-primary">Solicitar</a>
   </div>
 </article>

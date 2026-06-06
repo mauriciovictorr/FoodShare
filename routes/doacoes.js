@@ -217,7 +217,6 @@ router.get('/', authenticate, async (req, res) => {
       title: 'Doações - FoodShare',
       activeNav: 'doacoes',
       headerVariant: 'home',
-      featurePreview: true,
       ...data,
     });
   } catch (err) {
