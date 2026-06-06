@@ -1,0 +1,13 @@
+<div class="app-bottom-nav-wrap" aria-label="Navegação mobile">
+  <nav class="app-bottom-nav">
+    <a href="/" class="app-bottom-nav__link<%= activeNav === 'home' ? ' is-active' : '' %>" aria-label="Início"<%= activeNav === 'home' ? ' aria-current="page"' : '' %>>
+      <%- include('app-icon', { icon: 'home', size: 'nav' }) %>
+    </a>
+    <a href="/doacoes" class="app-bottom-nav__link<%= activeNav === 'doacoes' ? ' is-active' : '' %>" aria-label="Doações"<%= activeNav === 'doacoes' ? ' aria-current="page"' : '' %>>
+      <%- include('app-icon', { icon: 'redeem', size: 'nav' }) %>
+    </a>
+    <a href="<%= locals.usuario && (locals.usuario.role === 'doador' || locals.usuario.role === 'admin') ? '/solicitacoes/recebidas' : '/solicitacoes/minhas' %>" class="app-bottom-nav__link<%= activeNav === 'solicitacoes' ? ' is-active' : '' %>" aria-label="Solicitações"<%= activeNav === 'solicitacoes' ? ' aria-current="page"' : '' %>>
+      <%- include('app-icon', { icon: 'front_hand', size: 'nav' }) %>
+    </a>
+  </nav>
+</div>

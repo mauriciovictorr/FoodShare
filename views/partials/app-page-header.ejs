@@ -1,0 +1,22 @@
+<%#
+  Barra de ações da página (sem título — fica no app-header).
+  Uso: include('partials/app-page-header', {
+    actionLabel: '...',
+    actionModal: true
+  })
+%>
+<% if (typeof actionLabel !== 'undefined') { %>
+<header class="app-page-toolbar">
+  <% if (typeof actionModal !== 'undefined' && actionModal) { %>
+    <button type="button" class="app-page-header__btn" data-doacao-modal-open>
+      <%= actionLabel %>
+      <%- include('app-icon', { icon: 'arrow_forward', size: 'arrow' }) %>
+    </button>
+  <% } else if (typeof actionHref !== 'undefined') { %>
+    <a href="<%= actionHref %>" class="app-page-header__btn">
+      <%= actionLabel %>
+      <%- include('app-icon', { icon: 'arrow_forward', size: 'arrow' }) %>
+    </a>
+  <% } %>
+</header>
+<% } %>

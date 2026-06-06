@@ -1,0 +1,13 @@
+<%#
+  Ícone Material Symbols Rounded.
+  Uso: include('partials/app-icon', { icon: 'home', size: 'nav', filled: false, className: '' })
+  size: nav | header | metric | empty | panel | action | chevron | arrow | settings
+%>
+<%
+  const iconName = typeof icon !== 'undefined' ? icon : '';
+  const sizeKey = typeof size !== 'undefined' ? size : '';
+  const sizeClass = sizeKey ? ' app-icon--' + sizeKey : '';
+  const filledClass = typeof filled !== 'undefined' && filled ? ' app-icon--filled' : '';
+  const extraClass = typeof className !== 'undefined' ? ' ' + className : '';
+%>
+<span class="app-icon material-symbols-rounded<%= filledClass %><%= sizeClass %><%= extraClass %>" aria-hidden="true"><%= iconName %></span>
