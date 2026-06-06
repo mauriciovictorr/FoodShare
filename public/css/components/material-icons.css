@@ -27,10 +27,6 @@
   font-size: 20px;
 }
 
-.app-icon--filled {
-  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-}
-
 .app-icon--nav {
   font-size: 22px;
 }

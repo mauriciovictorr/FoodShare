@@ -112,18 +112,17 @@
   transition: background var(--duration-normal) var(--ease-out);
 }
 
-.app-sidebar__link .app-icon,
-.app-sidebar__logout button .app-icon {
+.app-sidebar__link .app-svg-icon,
+.app-sidebar__logout button .app-svg-icon {
   display: block;
-  color: var(--green-light);
 }
 
 .app-sidebar__link.is-active {
   background: var(--green-mid);
 }
 
-.app-sidebar__link.is-active .app-icon {
-  color: #fff;
+.app-sidebar__link.is-active .app-svg-icon {
+  filter: brightness(0) invert(1);
 }
 
 .app-sidebar__logout {
@@ -167,17 +166,16 @@
   text-decoration: none;
 }
 
-.app-bottom-nav__link .app-icon {
+.app-bottom-nav__link .app-svg-icon {
   display: block;
-  color: var(--green-light);
 }
 
 .app-bottom-nav__link.is-active {
   background: var(--green-mid);
 }
 
-.app-bottom-nav__link.is-active .app-icon {
-  color: #fff;
+.app-bottom-nav__link.is-active .app-svg-icon {
+  filter: brightness(0) invert(1);
 }
 
 /* ── Breakpoints app ── */

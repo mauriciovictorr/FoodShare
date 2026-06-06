@@ -29,7 +29,7 @@
         </div>
         <button type="button" class="home-hero-card__btn" data-doacao-modal-open>
           <%= semImpacto ? 'Começar a doar' : 'Fazer uma nova doação' %>
-          <%- include('partials/app-icon', { icon: 'arrow_forward', size: 'arrow' }) %>
+          <%- include('partials/app-svg-icon', { src: '/images/app/icon-arrow-right.svg', size: 'arrow' }) %>
         </button>
       </article>
     <% } else { %>
@@ -41,7 +41,7 @@
         </div>
         <a href="/doacoes" class="home-hero-card__btn">
           Ver doações disponíveis
-          <%- include('partials/app-icon', { icon: 'arrow_forward', size: 'arrow' }) %>
+          <%- include('partials/app-svg-icon', { src: '/images/app/icon-arrow-right.svg', size: 'arrow' }) %>
         </a>
       </article>
     <% } %>
@@ -49,7 +49,7 @@
     <div class="home-metrics__row">
       <article class="home-metric-card<%= semDoacoes || (!isDoador && stats.doacoesAtivas === 0) ? ' home-metric-card--empty' : '' %>">
         <div class="home-metric-card__icon home-metric-card__icon--green">
-          <%- include('partials/app-icon', { icon: isDoador ? 'inventory_2' : 'shopping_bag', size: 'metric', filled: true }) %>
+          <%- include('partials/app-svg-icon', { src: '/images/app/icon-gift-metric.svg', size: 'metric' }) %>
         </div>
         <div class="home-metric-card__body">
           <p class="home-metric-card__label"><%= isDoador ? 'Minhas doações' : 'Minhas solicitações' %></p>
@@ -60,7 +60,7 @@
 
       <article class="home-metric-card<%= semPendentes ? ' home-metric-card--empty' : '' %>">
         <div class="home-metric-card__icon home-metric-card__icon--amber">
-          <%- include('partials/app-icon', { icon: 'pending_actions', size: 'metric', filled: true }) %>
+          <%- include('partials/app-svg-icon', { src: '/images/app/icon-hand-metric.svg', size: 'metric' }) %>
         </div>
         <div class="home-metric-card__body">
           <p class="home-metric-card__label"><%= isDoador ? 'solicitações pendentes' : 'aguardando resposta' %></p>
@@ -77,7 +77,7 @@
         <header class="home-panel__header">
           <h2 class="home-panel__title">Minhas doações ativas</h2>
           <a href="/doacoes" class="home-panel__action" aria-label="Ver todas as doações">
-            <%- include('partials/app-icon', { icon: 'chevron_right', size: 'panel' }) %>
+            <%- include('partials/app-svg-icon', { src: '/images/app/icon-chevron-right.svg', size: 'panel' }) %>
           </a>
         </header>
 
@@ -141,12 +141,12 @@
                 <div class="home-request__actions home-request__actions--mobile">
                   <form action="/solicitacoes/<%= solic.id %>/aceitar" method="POST">
                     <button type="submit" class="home-icon-action" aria-label="Aceitar">
-                      <%- include('partials/app-icon', { icon: 'check_circle', size: 'action', filled: true }) %>
+                      <%- include('partials/app-icon', { icon: 'check_circle', size: 'action' }) %>
                     </button>
                   </form>
                   <form action="/solicitacoes/<%= solic.id %>/recusar" method="POST">
                     <button type="submit" class="home-icon-action" aria-label="Recusar">
-                      <%- include('partials/app-icon', { icon: 'cancel', size: 'action', filled: true }) %>
+                      <%- include('partials/app-icon', { icon: 'cancel', size: 'action' }) %>
                     </button>
                   </form>
                 </div>
@@ -160,7 +160,7 @@
         <header class="home-panel__header">
           <h2 class="home-panel__title">Doações disponíveis</h2>
           <a href="/doacoes" class="home-panel__action" aria-label="Ver todas">
-            <%- include('partials/app-icon', { icon: 'chevron_right', size: 'panel' }) %>
+            <%- include('partials/app-svg-icon', { src: '/images/app/icon-chevron-right.svg', size: 'panel' }) %>
           </a>
         </header>
         <%- include('partials/home-empty-state', {
