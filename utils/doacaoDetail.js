@@ -7,9 +7,9 @@ const {
 
 function doacaoStatusLabel(status) {
   const labels = {
-    disponivel: 'disponível',
-    reservado: 'reservado',
-    entregue: 'entregue',
+    disponivel: 'Disponível',
+    reservado: 'Reservado',
+    entregue: 'Entregue',
   };
   return labels[status] || status;
 }

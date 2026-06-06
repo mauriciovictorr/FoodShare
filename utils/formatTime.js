@@ -47,6 +47,18 @@ function donationDisplayStatus(doacao) {
   return doacao.status;
 }
 
+function donationStatusLabel(displayStatus) {
+  const map = {
+    ativo: 'Ativo',
+    disponivel: 'Disponível',
+    reservado: 'Reservado',
+    entregue: 'Entregue',
+    expirado: 'Expirado',
+    ultimas: 'Últimas unid.',
+  };
+  return map[displayStatus] || displayStatus;
+}
+
 function solicitationDisplayStatus(status) {
   const map = {
     pendente: 'pendente',
@@ -63,8 +75,13 @@ function solicitationPillKey(status) {
 }
 
 function solicitationPillLabel(status) {
-  if (status === 'aprovado') return 'aceito';
-  return solicitationDisplayStatus(status);
+  const map = {
+    pendente: 'Pendente',
+    aprovado: 'Aceito',
+    recusado: 'Recusado',
+    cancelado: 'Cancelado',
+  };
+  return map[status] || status;
 }
 
 const RECEPTOR_CATEGORY_FILTERS = [
@@ -116,6 +133,7 @@ module.exports = {
   timeAgo,
   isExpired,
   donationDisplayStatus,
+  donationStatusLabel,
   solicitationDisplayStatus,
   solicitationPillKey,
   solicitationPillLabel,

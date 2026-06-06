@@ -22,7 +22,7 @@
       <%- include('app-icon', { icon: iconName, size: 'metric' }) %>
     </div>
     <span class="home-pill home-pill--<%= item.availabilityPill %>">
-      <%= item.availabilityPill === 'ultimas' ? 'últimas unid.' : 'disponível' %>
+      <%= donationStatusLabel(item.availabilityPill) %>
     </span>
   </div>
 

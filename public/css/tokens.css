@@ -78,9 +78,11 @@
   --app-input-px: 16px;
   --app-control-fs: var(--app-fs-md);
   --app-control-radius: var(--radius-md);
-  --app-control-bg: var(--surface);
-  --app-tag-py: 6px;
-  --app-tag-px: 10px;
+  /* Controles sobre --app-bg → branco; dentro de --card → cor da página */
+  --app-control-bg: var(--card);
+  --app-inset-bg: var(--app-bg);
+  --app-tag-py: 8px;
+  --app-tag-px: 14px;
   --app-tag-fs: var(--app-fs-sm);
   --app-surface-gap: 12px;
   --app-surface-radius: var(--radius-xl);

@@ -195,20 +195,33 @@ button.app-btn-primary {
 /* ── Filtros (chips) ── */
 .app-filter-chips {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: var(--app-space-xs);
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.app-filter-chips::-webkit-scrollbar {
+  display: none;
 }
 
 .app-filter-chip {
-  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: var(--app-tag-py) var(--app-tag-px);
   border: none;
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-sm);
   background: var(--app-control-bg);
   color: var(--text-muted);
   font-family: inherit;
-  font-size: var(--app-fs-sm);
-  font-weight: 600;
-  text-transform: capitalize;
+  font-size: var(--app-tag-fs);
+  font-weight: 500;
+  line-height: 1.2;
   cursor: pointer;
   transition:
     background var(--duration-normal) var(--ease-out),
@@ -224,6 +237,7 @@ button.app-btn-primary {
 .app-filter-chip.is-active {
   background: var(--green-mid);
   color: #fff;
+  font-weight: 600;
 }
 
 /* ── Tags informativas (meta) ── */
@@ -241,7 +255,7 @@ button.app-btn-primary {
   gap: 5px;
   padding: var(--app-tag-py) var(--app-tag-px);
   border-radius: var(--radius-sm);
-  background: var(--surface-green);
+  background: var(--app-inset-bg);
   color: var(--text-muted);
   font-size: var(--app-tag-fs);
   font-weight: 500;
@@ -264,7 +278,6 @@ button.app-btn-primary {
   border-radius: var(--radius-sm);
   font-size: var(--app-fs-sm);
   font-weight: 600;
-  text-transform: lowercase;
   justify-self: center;
 }
 

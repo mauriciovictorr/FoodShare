@@ -30,7 +30,7 @@
           const itemLabel = solic.doacao.itens && solic.doacao.itens[0]
             ? solic.doacao.itens[0].nome
             : 'Doação';
-          const statusLabel = solicitationDisplayStatus(solic.status);
+          const pillLabel = solicitationPillLabel(solic.status);
           const pillKey = solicitationPillKey(solic.status);
         %>
           <li
@@ -71,7 +71,7 @@
                 </form>
               </div>
             <% } else { %>
-              <span class="home-pill home-pill--<%= pillKey %>"><%= statusLabel %></span>
+              <span class="home-pill home-pill--<%= pillKey %>"><%= pillLabel %></span>
             <% } %>
           </li>
         <% }); %>

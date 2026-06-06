@@ -16,6 +16,7 @@ const {
   formatCategoryLabel,
   formatDateShort,
   donationDisplayStatus,
+  donationStatusLabel,
   isExpired,
   mesAtual,
 } = require('./utils/formatTime');
@@ -43,6 +44,7 @@ app.locals.categoryIconVariant = categoryIconVariant;
 app.locals.formatCategoryLabel = formatCategoryLabel;
 app.locals.formatDateShort = formatDateShort;
 app.locals.donationDisplayStatus = donationDisplayStatus;
+app.locals.donationStatusLabel = donationStatusLabel;
 app.locals.isExpired = isExpired;
 app.locals.mesAtual = mesAtual;
 

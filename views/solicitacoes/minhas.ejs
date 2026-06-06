@@ -17,7 +17,8 @@
           const itemLabel = solic.doacao.itens && solic.doacao.itens[0]
             ? solic.doacao.itens[0].nome
             : 'Doação';
-          const statusLabel = solicitationDisplayStatus(solic.status);
+          const pillKey = solicitationPillKey(solic.status);
+          const pillLabel = solicitationPillLabel(solic.status);
         %>
           <li class="home-request">
             <div class="home-request__info">
@@ -33,7 +34,7 @@
                 <button type="submit" class="home-btn-secondary home-btn-secondary--sm">Cancelar</button>
               </form>
             <% } else { %>
-              <span class="home-pill home-pill--<%= statusLabel %>"><%= statusLabel %></span>
+              <span class="home-pill home-pill--<%= pillKey %>"><%= pillLabel %></span>
             <% } %>
           </li>
         <% }); %>

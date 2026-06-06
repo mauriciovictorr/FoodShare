@@ -12,7 +12,7 @@
 .doacao-edit-form > .auth-field .custom-select__trigger,
 .doacao-modal__body > .auth-field .auth-field__input,
 .doacao-modal__body > .auth-field .custom-select__trigger {
-  background: var(--surface-green);
+  background: var(--app-inset-bg);
   border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
 }
 
@@ -53,6 +53,23 @@
   border-top: var(--divider);
   background: #fff;
   border-radius: 0 0 28px 28px;
+}
+
+.feedback-modal__actions--form .feedback-modal__btn {
+  min-height: 48px;
+  padding: 14px 20px;
+  border-radius: 14px;
+  font-size: 14px;
+}
+
+@media (max-width: 960px) {
+  .feedback-modal__actions--form .feedback-modal__btn {
+    min-height: 60px;
+    padding: 18px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 20px;
+  }
 }
 
 .doacao-modal__form {
