@@ -144,8 +144,6 @@
 }
 
 .app-history-item__right .home-pill {
-  min-width: 0;
-  max-width: 100%;
   padding: 6px 10px;
   font-size: var(--app-fs-xs);
 }
@@ -381,15 +379,21 @@
 
 .home-request--readonly .home-pill {
   justify-self: auto;
-  min-width: auto;
-  flex-shrink: 0;
 }
 
 .home-request__aside {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: var(--app-space-xs);
-  flex-shrink: 0;
+  flex: 0 0 var(--app-pill-col-w);
+  width: var(--app-pill-col-w);
+}
+
+.home-request__aside .home-pill {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .home-request__aside form {

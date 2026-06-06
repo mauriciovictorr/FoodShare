@@ -549,12 +549,16 @@ button.home-empty-state__btn {
 }
 
 .home-table .home-pill {
-  justify-self: center;
-  min-width: var(--app-pill-min-w);
-  width: auto;
+  justify-self: stretch;
+  width: 100%;
+  min-width: 0;
   max-width: 100%;
   padding: 6px 10px;
   font-size: var(--app-fs-xs);
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ── Lista solicitações ── */

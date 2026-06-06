@@ -1,5 +1,41 @@
 /* Modal de nova doação — estende feedback-modal */
 
+/* Form modals compartilhados — nova doação + solicitar doação */
+.doacao-modal,
+.solicitacao-modal {
+  position: relative;
+}
+
+.doacao-modal .doacao-modal__header,
+.solicitacao-modal .doacao-modal__header {
+  padding: 24px 24px 0;
+  padding-right: 52px;
+}
+
+.doacao-modal .feedback-modal__title,
+.solicitacao-modal .feedback-modal__title {
+  font-size: var(--app-fs-3xl);
+}
+
+.doacao-modal .feedback-modal__description,
+.solicitacao-modal .feedback-modal__description {
+  font-size: var(--app-fs-md);
+}
+
+.doacao-modal .feedback-modal__actions--form,
+.solicitacao-modal .feedback-modal__actions--form {
+  padding: 16px 24px calc(24px + env(safe-area-inset-bottom, 0px));
+}
+
+.doacao-modal .feedback-modal__actions--form .feedback-modal__btn,
+.solicitacao-modal .feedback-modal__actions--form .feedback-modal__btn {
+  font-size: var(--app-fs-md);
+}
+
+.doacao-modal .doacao-modal__body {
+  padding: 16px 24px;
+}
+
 .auth-field__input--textarea {
   min-height: 72px;
   resize: vertical;
@@ -35,7 +71,6 @@
 
 .doacao-modal__header {
   flex-shrink: 0;
-  padding: 28px 28px 0;
 }
 
 .feedback-modal__content--form {
@@ -234,12 +269,15 @@
     border-radius: 28px 28px 0 0;
   }
 
-  .doacao-modal__header {
-    padding: 24px 24px 0;
+  .doacao-modal .doacao-modal__header,
+  .solicitacao-modal .doacao-modal__header {
+    padding: 24px 20px 0;
+    padding-right: 48px;
   }
 
-  .doacao-modal__body {
-    padding: 16px 24px 12px;
+  .doacao-modal .doacao-modal__body,
+  .solicitacao-modal .doacao-modal__body {
+    padding: 16px 20px 12px;
   }
 
   .feedback-modal__actions--form {

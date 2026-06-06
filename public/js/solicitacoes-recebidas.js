@@ -109,12 +109,10 @@
         '<form action="/solicitacoes/' + escapeHtml(detail.id) + '/aceitar" method="POST" class="solicitacao-detail-modal__form">' +
           '<button type="submit" class="feedback-modal__btn feedback-modal__btn--primary">Aceitar</button>' +
         '</form>';
-    } else {
-      actionsHtml =
-        '<button type="button" class="feedback-modal__btn feedback-modal__btn--secondary" data-solicitacao-detail-close>Fechar</button>';
     }
 
     actionsEl.innerHTML = actionsHtml;
+    actionsEl.hidden = !actionsHtml;
   }
 
   function close() {
@@ -153,7 +151,7 @@
 
   function shouldIgnoreClick(target) {
     return Boolean(
-      target.closest('a, button, input, select, textarea, label, form, .home-request__actions')
+      target.closest('a, button, input, select, textarea, label, form, .home-table__edit, .home-table__action')
     );
   }
 

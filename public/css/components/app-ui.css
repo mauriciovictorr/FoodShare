@@ -307,3 +307,16 @@ button.app-btn-primary {
   background: var(--surface);
   color: var(--muted);
 }
+
+/* Pills alinhadas em coluna de lista/tabela — mesma largura em todas as linhas */
+.home-requests .home-pill,
+.app-history-item__right .home-pill {
+  width: var(--app-pill-col-w);
+  min-width: var(--app-pill-col-w);
+  max-width: var(--app-pill-col-w);
+  flex-shrink: 0;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

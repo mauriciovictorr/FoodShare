@@ -31,15 +31,19 @@
     var render = window.AppDetailModalRender;
     if (!render) return;
 
+    var isReceptorView = Boolean(detail.canSolicitar);
     var badges = [{ key: statusPillClass(detail.status), label: detail.statusLabel }];
-    if (detail.publicadoLabel) {
+    if (isReceptorView && detail.publicadoLabel) {
       badges.push({ key: 'neutral', label: detail.publicadoLabel });
     }
 
     bodyEl.innerHTML = render.renderBody({
       titleId: 'doacao-detail-title',
       title: detail.title,
-      deNome: detail.doadorNome,
+      deNome: isReceptorView ? detail.doadorNome : null,
+      subtitle: !isReceptorView && detail.publicadoLabel
+        ? 'Publicado ' + detail.publicadoLabel
+        : null,
       badges: badges,
       noteLabel: detail.observacoes ? 'Observação' : null,
       noteText: detail.observacoes,
@@ -47,7 +51,7 @@
       itemsAriaLabel: 'Itens da doação',
     });
 
-    var actionsHtml = '<button type="button" class="feedback-modal__btn feedback-modal__btn--secondary" data-doacao-detail-close>Fechar</button>';
+    var actionsHtml = '';
 
     if (detail.canSolicitar) {
       actionsHtml +=
@@ -58,6 +62,7 @@
     }
 
     actionsEl.innerHTML = actionsHtml;
+    actionsEl.hidden = !actionsHtml;
   }
 
   function close() {

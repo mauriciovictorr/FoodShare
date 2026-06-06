@@ -12,6 +12,7 @@
   var quantidadeInput = null;
   var observacoesInput = null;
   var submitBtn = null;
+  var subtitleEl = null;
   var catalog = {};
 
   function escapeHtml(str) {
@@ -90,16 +91,24 @@
     errorsEl.hidden = false;
   }
 
+  function formatContextLine(detail) {
+    if (!detail) return '';
+    var title = detail.title || 'Doação';
+    if (detail.doadorNome) return title + ' de ' + detail.doadorNome;
+    return title;
+  }
+
+  function updateContextSubtitle(detail) {
+    if (!subtitleEl) return;
+    subtitleEl.textContent = formatContextLine(detail);
+  }
+
   function renderSummary(detail) {
     if (!summaryEl || !window.AppDetailModalRender) return;
 
-    summaryEl.innerHTML = window.AppDetailModalRender.renderBody({
-      title: detail.title,
-      deNome: detail.doadorNome,
-      items: detail.itens,
-      itemsAriaLabel: 'Itens do pacote',
+    summaryEl.innerHTML = window.AppDetailModalRender.renderItemsPanel(detail.itens, {
+      ariaLabel: 'Itens do pacote',
     });
-
     summaryEl.hidden = false;
   }
 
@@ -120,6 +129,7 @@
     resetForm();
 
     if (doacaoIdInput) doacaoIdInput.value = doacaoId;
+    updateContextSubtitle(detail);
     renderSummary(detail);
 
     overlay.hidden = false;
@@ -151,6 +161,7 @@
         summaryEl.hidden = true;
         summaryEl.innerHTML = '';
       }
+      if (subtitleEl) subtitleEl.textContent = '';
       if (!document.querySelector('.feedback-modal-overlay.is-open')) {
         document.body.classList.remove('feedback-modal-open');
       }
@@ -266,6 +277,7 @@
     quantidadeInput = document.querySelector('[data-solicitacao-quantidade]');
     observacoesInput = document.querySelector('[data-solicitacao-observacoes]');
     submitBtn = document.querySelector('[data-solicitacao-submit]');
+    subtitleEl = document.querySelector('[data-solicitacao-subtitle]');
 
     if (!overlay || !form) return;
 

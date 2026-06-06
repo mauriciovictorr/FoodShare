@@ -98,16 +98,13 @@
 
     if (detail.isPendente) {
       actionsHtml +=
-        '<button type="button" class="feedback-modal__btn feedback-modal__btn--secondary" data-solicitacao-detail-close>Fechar</button>' +
         '<form action="/solicitacoes/' + render.escapeHtml(detail.id) + '/cancelar" method="POST" class="solicitacao-detail-modal__form">' +
           '<button type="submit" class="feedback-modal__btn feedback-modal__btn--primary">Cancelar solicitação</button>' +
         '</form>';
-    } else {
-      actionsHtml =
-        '<button type="button" class="feedback-modal__btn feedback-modal__btn--secondary" data-solicitacao-detail-close>Fechar</button>';
     }
 
     actionsEl.innerHTML = actionsHtml;
+    actionsEl.hidden = !actionsHtml;
   }
 
   function close() {
