@@ -76,12 +76,16 @@ const RECEPTOR_CATEGORY_FILTERS = [
   { key: 'enlatados', label: 'Enlatados' },
 ];
 
+const RECEPTOR_FILTER_KEYS = RECEPTOR_CATEGORY_FILTERS.map((f) => f.key).filter((k) => k !== 'todos');
+
 function categoryFilterKey(categoria) {
-  const c = String(categoria || '').toLowerCase();
+  const c = String(categoria || '').toLowerCase().normalize('NFC');
+  const direct = RECEPTOR_FILTER_KEYS.find((key) => c === key || c.startsWith(key));
+  if (direct) return direct;
   if (c.includes('grão') || c.includes('grao') || c.includes('cereal')) return 'grãos';
-  if (c.includes('fruta') || c.includes('vegeta')) return 'frutas';
+  if (c.includes('fruta') || c.includes('vegeta') || c.includes('legume')) return 'frutas';
   if (c.includes('latic')) return 'laticínios';
-  if (c.includes('padaria')) return 'padaria';
+  if (c.includes('padaria') || c.includes('pão') || c.includes('pao') || c.includes('bolo')) return 'padaria';
   if (c.includes('industrial') || c.includes('enlat')) return 'enlatados';
   return 'outros';
 }
