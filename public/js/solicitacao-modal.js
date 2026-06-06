@@ -91,29 +91,14 @@
   }
 
   function renderSummary(detail) {
-    if (!summaryEl) return;
+    if (!summaryEl || !window.AppDetailModalRender) return;
 
-    var itensHtml = (detail.itens || [])
-      .map(function (item) {
-        return (
-          '<li class="solicitacao-modal__summary-item">' +
-            '<span class="solicitacao-modal__summary-name">' + escapeHtml(item.nome) + '</span>' +
-            '<span class="solicitacao-modal__summary-sub">' +
-              escapeHtml(item.categoriaLabel) + ' · ' + item.quantidade + ' un · Val. ' + escapeHtml(item.validadeLabel) +
-            '</span>' +
-          '</li>'
-        );
-      })
-      .join('');
-
-    var metaHtml = detail.doadorNome
-      ? '<p class="solicitacao-modal__summary-meta">Doador: ' + escapeHtml(detail.doadorNome) + '</p>'
-      : '';
-
-    summaryEl.innerHTML =
-      '<p class="solicitacao-modal__summary-title">' + escapeHtml(detail.title) + '</p>' +
-      metaHtml +
-      '<ul class="solicitacao-modal__summary-list" aria-label="Itens do pacote">' + itensHtml + '</ul>';
+    summaryEl.innerHTML = window.AppDetailModalRender.renderBody({
+      title: detail.title,
+      deNome: detail.doadorNome,
+      items: detail.itens,
+      itemsAriaLabel: 'Itens do pacote',
+    });
 
     summaryEl.hidden = false;
   }

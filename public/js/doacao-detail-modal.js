@@ -9,14 +9,6 @@
   var actionsEl = null;
   var catalog = {};
 
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
   function statusPillClass(status) {
     if (status === 'disponivel') return 'ativo';
     if (status === 'reservado') return 'reservado';
@@ -36,47 +28,33 @@
   }
 
   function renderDetail(detail) {
-    var itensHtml = detail.itens
-      .map(function (item) {
-        return (
-          '<li class="doacao-detail-modal__item">' +
-            '<span class="doacao-detail-modal__item-name">' + escapeHtml(item.nome) + '</span>' +
-            '<span class="doacao-detail-modal__item-sub">' +
-              escapeHtml(item.categoriaLabel) + ' · ' + item.quantidade + ' un' +
-            '</span>' +
-            '<span class="doacao-detail-modal__item-validade">Val. ' + escapeHtml(item.validadeLabel) + '</span>' +
-          '</li>'
-        );
-      })
-      .join('');
+    var render = window.AppDetailModalRender;
+    if (!render) return;
 
-    var metaParts = [];
-    if (detail.doadorNome) metaParts.push('Doador: ' + escapeHtml(detail.doadorNome));
-    if (detail.publicadoLabel) metaParts.push(escapeHtml(detail.publicadoLabel));
+    var badges = [{ key: statusPillClass(detail.status), label: detail.statusLabel }];
+    if (detail.publicadoLabel) {
+      badges.push({ key: 'neutral', label: detail.publicadoLabel });
+    }
 
-    var noteHtml = detail.observacoes
-      ? '<div class="doacao-detail-modal__note"><strong>Observações</strong>' + escapeHtml(detail.observacoes) + '</div>'
-      : '';
-
-    bodyEl.innerHTML =
-      '<div class="doacao-detail-modal__head">' +
-        '<h2 id="doacao-detail-title" class="doacao-detail-modal__title">' + escapeHtml(detail.title) + '</h2>' +
-        '<div class="doacao-detail-modal__meta">' +
-          '<span class="home-pill home-pill--' + statusPillClass(detail.status) + '">' + escapeHtml(detail.statusLabel) + '</span>' +
-          (metaParts.length ? '<span>' + metaParts.join(' · ') + '</span>' : '') +
-        '</div>' +
-      '</div>' +
-      noteHtml +
-      '<ul class="doacao-detail-modal__items" aria-label="Itens da doação">' + itensHtml + '</ul>';
+    bodyEl.innerHTML = render.renderBody({
+      titleId: 'doacao-detail-title',
+      title: detail.title,
+      deNome: detail.doadorNome,
+      badges: badges,
+      noteLabel: detail.observacoes ? 'Observação' : null,
+      noteText: detail.observacoes,
+      items: detail.itens,
+      itemsAriaLabel: 'Itens da doação',
+    });
 
     var actionsHtml = '<button type="button" class="feedback-modal__btn feedback-modal__btn--secondary" data-doacao-detail-close>Fechar</button>';
 
     if (detail.canSolicitar) {
       actionsHtml +=
-        '<button type="button" class="feedback-modal__btn feedback-modal__btn--primary" data-solicitacao-open="' + escapeHtml(detail.id) + '">Solicitar</button>';
+        '<button type="button" class="feedback-modal__btn feedback-modal__btn--primary" data-solicitacao-open="' + render.escapeHtml(detail.id) + '">Solicitar</button>';
     } else if (detail.editarUrl) {
       actionsHtml +=
-        '<a href="' + escapeHtml(detail.editarUrl) + '" class="feedback-modal__btn feedback-modal__btn--primary feedback-modal__btn--link">Editar doação</a>';
+        '<a href="' + render.escapeHtml(detail.editarUrl) + '" class="feedback-modal__btn feedback-modal__btn--primary feedback-modal__btn--link">Editar doação</a>';
     }
 
     actionsEl.innerHTML = actionsHtml;
@@ -164,7 +142,7 @@
     overlay = document.getElementById('doacao-detail-overlay');
     bodyEl = document.getElementById('doacao-detail-body');
     actionsEl = document.getElementById('doacao-detail-actions');
-    if (!overlay || !bodyEl || !actionsEl) return;
+    if (!overlay || !bodyEl || !actionsEl || !window.AppDetailModalRender) return;
 
     loadCatalog();
     if (Object.keys(catalog).length === 0) return;

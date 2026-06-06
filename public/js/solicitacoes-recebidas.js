@@ -69,62 +69,35 @@
     });
   }
 
-  function renderFacts(detail) {
-    var facts = [];
+  function renderDetail(detail) {
+    var render = window.AppDetailModalRender;
+    if (!render) return;
 
-    if (detail.receptorNome) {
-      facts.push({ label: 'Solicitante', value: detail.receptorNome });
+    var badges = [
+      { key: detail.statusKey, label: detail.statusLabel },
+      { key: 'neutral', label: detail.criadoLabel },
+    ];
+
+    var facts = [{ label: 'Pedido em', value: detail.criadoEm }];
+    if (!detail.isPendente) {
+      facts.push({ label: 'Atualizado em', value: detail.atualizadoEm });
     }
     if (detail.receptorEmail) {
       facts.push({ label: 'E-mail', value: detail.receptorEmail });
     }
-    facts.push({ label: 'Pedido em', value: detail.criadoEm });
-    if (!detail.isPendente) {
-      facts.push({ label: 'Atualizado em', value: detail.atualizadoEm });
-    }
 
-    return (
-      '<ul class="doacao-detail-modal__facts" aria-label="Informações do pedido">' +
-      facts.map(function (fact) {
-        return (
-          '<li class="doacao-detail-modal__fact">' +
-            '<span class="doacao-detail-modal__fact-label">' + escapeHtml(fact.label) + '</span>' +
-            '<span class="doacao-detail-modal__fact-value">' + escapeHtml(fact.value) + '</span>' +
-          '</li>'
-        );
-      }).join('') +
-      '</ul>'
-    );
-  }
-
-  function renderDetail(detail) {
-    var itensHtml = '';
-    if (detail.itens && detail.itens.length > 1) {
-      itensHtml =
-        '<ul class="doacao-detail-modal__items" aria-label="Itens do pacote">' +
-        detail.itens.map(function (item) {
-          return (
-            '<li class="doacao-detail-modal__item">' +
-              '<span class="doacao-detail-modal__item-name">' + escapeHtml(item.nome) + '</span>' +
-              '<span class="doacao-detail-modal__item-sub">' + item.quantidade + ' un no pacote</span>' +
-            '</li>'
-          );
-        }).join('') +
-        '</ul>';
-    }
-
-    var noteHtml = detail.observacoes
-      ? '<div class="doacao-detail-modal__note"><strong>Mensagem do solicitante</strong>' + escapeHtml(detail.observacoes) + '</div>'
-      : '';
-
-    bodyEl.innerHTML =
-      '<div class="doacao-detail-modal__head">' +
-        '<h2 id="solicitacao-detail-title" class="doacao-detail-modal__title">' + escapeHtml(detail.title) + '</h2>' +
-        '<span class="home-pill home-pill--' + escapeHtml(detail.statusKey) + '">' + escapeHtml(detail.statusLabel) + '</span>' +
-      '</div>' +
-      renderFacts(detail) +
-      noteHtml +
-      itensHtml;
+    bodyEl.innerHTML = render.renderBody({
+      titleId: 'solicitacao-detail-title',
+      title: detail.title,
+      deNome: detail.receptorNome,
+      badges: badges,
+      noteLabel: detail.observacoes ? 'Mensagem do solicitante' : null,
+      noteText: detail.observacoes,
+      factsLabel: 'Informações',
+      facts: facts,
+      items: detail.itens,
+      itemsAriaLabel: 'Itens do pacote',
+    });
 
     var actionsHtml = '';
 
@@ -234,7 +207,7 @@
     bindFilters();
     updateFilterView();
 
-    if (!overlay || !bodyEl || !actionsEl || Object.keys(catalog).length === 0) return;
+    if (!overlay || !bodyEl || !actionsEl || !window.AppDetailModalRender || Object.keys(catalog).length === 0) return;
     bindModal();
   }
 
