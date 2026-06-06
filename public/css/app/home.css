@@ -509,6 +509,28 @@ button.home-empty-state__btn {
   color: var(--text);
 }
 
+.home-table--actions .home-table__head,
+.home-table--actions .home-table__row {
+  grid-template-columns: 1.4fr 1fr 1fr var(--app-pill-min-w) 72px;
+}
+
+.home-table__action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.home-table__edit {
+  font-size: var(--app-fs-sm);
+  font-weight: 500;
+  color: var(--green-mid);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.home-table__edit:hover {
+  text-decoration: underline;
+}
+
 /* ── Pills de status ── */
 .home-pill {
   display: inline-flex;

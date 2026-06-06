@@ -63,6 +63,7 @@ async function getDoadorIndexData(userId) {
   const itens = doacoes.flatMap((doacao) =>
     doacao.itens.map((item) => ({
       id: item.id,
+      doacaoId: doacao.id,
       nome: item.nome,
       quantidade: item.quantidade,
       categoria: item.categoria,
@@ -74,7 +75,7 @@ async function getDoadorIndexData(userId) {
     }))
   );
 
-  return { isDoador: true, itens, doacoes: [] };
+  return { isDoador: true, itens, doacoes };
 }
 
 /**
@@ -189,4 +190,177 @@ router.post('/nova', authenticate, authorize(['doador', 'admin']), async (req, r
   }
 });
 
+/**
+ * @swagger
+ * /doacoes/{id}/editar:
+ *   get:
+ *     summary: Renderiza o formulário de edição de uma doação
+ *     tags: [Doacoes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: "ID da doação a ser editada"
+ *     responses:
+ *       200:
+ *         description: Formulário de edição renderizado com sucesso
+ *       403:
+ *         description: Acesso negado (não é o dono da doação)
+ *       404:
+ *         description: Doação não encontrada
+ */
+router.get('/:id/editar', authenticate, authorize(['doador', 'admin']), async (req, res) => {
+  try {
+    const doacao = await prisma.doacao.findUnique({
+      where: { id: req.params.id },
+      include: { itens: { orderBy: { validade: 'asc' } } },
+    });
+
+    if (!doacao) {
+      return res.status(404).render('error', { statusCode: 404, context: 'doacoes_edit', error: { status: 404 } });
+    }
+
+    if (doacao.usuarioId !== req.usuario.id && req.usuario.role !== 'admin') {
+      return res.status(403).render('error', { statusCode: 403, context: 'doacoes_edit', error: { status: 403 } });
+    }
+
+    if (isApiRequest(req)) return res.status(200).json(doacao);
+    return res.render('doacoes/editar', {
+      title: 'Editar Doação - FoodShare',
+      activeNav: 'doacoes',
+      pageHeadingPrefix: 'Editar',
+      pageHeadingHighlight: 'doação',
+      pageSubtitle: 'Atualize os itens, observações e status do pacote publicado.',
+      doacao,
+      errors: [],
+    });
+  } catch (err) {
+    console.error('[doacoes] Erro ao carregar edição:', err);
+    if (isApiRequest(req)) return res.status(500).json({ message: 'Erro interno' });
+    res.status(500).render('error', { statusCode: 500, context: 'doacoes_edit', error: err });
+  }
+});
+
+/**
+ * @swagger
+ * /doacoes/{id}/editar:
+ *   post:
+ *     summary: Atualiza os dados de uma doação existente
+ *     tags: [Doacoes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: "ID da doação a ser atualizada"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *               quantidade:
+ *                 type: integer
+ *               categoria:
+ *                 type: string
+ *               validade:
+ *                 type: string
+ *                 format: date
+ *               observacoes:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *                 enum: [disponivel, reservado, entregue]
+ *     responses:
+ *       200:
+ *         description: Doação atualizada com sucesso
+ *       403:
+ *         description: Acesso negado
+ *       404:
+ *         description: Doação não encontrada
+ */
+router.post('/:id/editar', authenticate, authorize(['doador', 'admin']), async (req, res) => {
+  try {
+    const doacao = await prisma.doacao.findUnique({
+      where: { id: req.params.id },
+      include: { itens: { orderBy: { validade: 'asc' } } },
+    });
+
+    if (!doacao) {
+      if (isApiRequest(req)) return res.status(404).json({ message: 'Doação não encontrada' });
+      return res.status(404).render('error', { statusCode: 404, context: 'doacoes_edit', error: { status: 404 } });
+    }
+
+    if (doacao.usuarioId !== req.usuario.id && req.usuario.role !== 'admin') {
+      if (isApiRequest(req)) return res.status(403).json({ message: 'Acesso negado' });
+      return res.status(403).render('error', { statusCode: 403, context: 'doacoes_edit', error: { status: 403 } });
+    }
+
+    const { errors, itens } = validateDoacao(req.body);
+    const { observacoes, status } = req.body;
+    const statusValidos = ['disponivel', 'reservado', 'entregue'];
+
+    if (errors.length > 0) {
+      if (isApiRequest(req)) return res.status(400).json({ errors });
+      return res.status(400).render('doacoes/editar', {
+        title: 'Editar Doação - FoodShare',
+        activeNav: 'doacoes',
+        pageHeadingPrefix: 'Editar',
+        pageHeadingHighlight: 'doação',
+        pageSubtitle: 'Atualize os itens, observações e status do pacote publicado.',
+        doacao: {
+          ...doacao,
+          observacoes: observacoes ?? doacao.observacoes,
+          status: statusValidos.includes(status) ? status : doacao.status,
+          itens: itens.map((item, index) => ({
+            ...doacao.itens[index],
+            ...item,
+          })),
+        },
+        doacaoOld: req.body,
+        errors,
+      });
+    }
+
+    const doacaoAtualizada = await prisma.$transaction(async (tx) => {
+      const updated = await tx.doacao.update({
+        where: { id: req.params.id },
+        data: {
+          observacoes: observacoes?.trim() || null,
+          status: statusValidos.includes(status) ? status : doacao.status,
+        },
+      });
+
+      await tx.itemDoacao.deleteMany({ where: { doacaoId: req.params.id } });
+      await tx.itemDoacao.createMany({
+        data: itens.map((item) => ({
+          doacaoId: req.params.id,
+          nome: String(item.nome).trim(),
+          quantidade: parseInt(item.quantidade, 10),
+          categoria: item.categoria,
+          validade: new Date(item.validade),
+        })),
+      });
+
+      return updated;
+    });
+
+    if (isApiRequest(req)) {
+      return res.status(200).json({ message: 'Doação atualizada com sucesso', doacao: doacaoAtualizada });
+    }
+    return res.redirect('/doacoes');
+  } catch (err) {
+    console.error('[doacoes] Erro ao atualizar doação:', err);
+    if (isApiRequest(req)) return res.status(500).json({ message: 'Erro interno ao atualizar doação' });
+    res.status(500).render('error', { statusCode: 500, context: 'doacoes_edit', error: err });
+  }
+});
+
 module.exports = router;
+

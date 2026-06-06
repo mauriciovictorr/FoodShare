@@ -344,3 +344,29 @@
     border-radius: var(--radius-modal);
   }
 }
+
+.doacao-edit-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-gap-metrics);
+}
+
+.doacao-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-gap-metrics);
+}
+
+.doacao-edit-meta {
+  font-size: var(--app-fs-sm);
+  color: var(--muted);
+}
+
+.doacao-edit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 0.5px solid var(--border);
+}

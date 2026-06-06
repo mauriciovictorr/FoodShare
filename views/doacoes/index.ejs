@@ -15,19 +15,28 @@
           actionModal: true
         }) %>
       <% } else { %>
-        <div class="home-table">
+        <div class="home-table home-table--actions">
           <div class="home-table__head">
             <span>item</span>
             <span>quantidade</span>
             <span>validade</span>
             <span>status</span>
+            <span>ações</span>
           </div>
+          <% var seenDoacoes = {}; %>
           <% itens.forEach(function(item) { %>
             <div class="home-table__row">
               <span class="home-table__item"><%= item.nome %></span>
               <span class="home-table__qty"><%= item.quantidade %> un</span>
               <span class="home-table__date"><%= formatValidade(item.validade) %></span>
               <span class="home-pill home-pill--<%= item.displayStatus %>"><%= item.displayStatus %></span>
+              <span class="home-table__action">
+                <% if (!seenDoacoes[item.doacaoId]) {
+                  seenDoacoes[item.doacaoId] = true;
+                %>
+                  <a href="/doacoes/<%= item.doacaoId %>/editar" class="home-table__edit">Editar</a>
+                <% } %>
+              </span>
             </div>
           <% }); %>
         </div>
