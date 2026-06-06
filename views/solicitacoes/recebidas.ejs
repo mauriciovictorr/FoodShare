@@ -12,14 +12,35 @@
         actionHref: '/doacoes'
       }) %>
     <% } else { %>
-      <ul class="home-requests">
+      <div class="solicitacoes-toolbar">
+        <p class="solicitacoes-toolbar__count" data-solicitacoes-count>
+          <%= solicitacoes.length %> <%= solicitacoes.length === 1 ? 'pedido' : 'pedidos' %>
+        </p>
+        <div class="receptor-filters solicitacoes-filters" role="group" aria-label="Filtrar pedidos">
+          <button type="button" class="receptor-filter-chip is-active" data-solicitacao-filter="todos">Todos</button>
+          <button type="button" class="receptor-filter-chip" data-solicitacao-filter="pendente">Pendentes</button>
+          <button type="button" class="receptor-filter-chip" data-solicitacao-filter="aprovado">Aprovados</button>
+          <button type="button" class="receptor-filter-chip" data-solicitacao-filter="recusado">Recusados</button>
+          <button type="button" class="receptor-filter-chip" data-solicitacao-filter="cancelado">Cancelados</button>
+        </div>
+      </div>
+
+      <ul class="home-requests" data-solicitacoes-list>
         <% solicitacoes.forEach(function(solic) {
           const itemLabel = solic.doacao.itens && solic.doacao.itens[0]
             ? solic.doacao.itens[0].nome
             : 'Doação';
           const statusLabel = solicitationDisplayStatus(solic.status);
+          const pillKey = solicitationPillKey(solic.status);
         %>
-          <li class="home-request">
+          <li
+            class="home-request home-request--clickable"
+            data-solicitacao-id="<%= solic.id %>"
+            data-status="<%= solic.status %>"
+            role="button"
+            tabindex="0"
+            aria-label="Ver detalhes do pedido de <%= itemLabel %>"
+          >
             <div class="home-request__info">
               <p class="home-request__title"><%= itemLabel %> · <%= solic.quantidade %> un</p>
               <p class="home-request__meta">
@@ -50,13 +71,21 @@
                 </form>
               </div>
             <% } else { %>
-              <span class="home-pill home-pill--<%= statusLabel %>"><%= statusLabel %></span>
+              <span class="home-pill home-pill--<%= pillKey %>"><%= statusLabel %></span>
             <% } %>
           </li>
         <% }); %>
       </ul>
+
+      <p class="solicitacoes-filter-empty" data-solicitacoes-filter-empty hidden>
+        Nenhum pedido neste filtro.
+      </p>
     <% } %>
   </article>
 </div>
+
+<%- include('../partials/solicitacoes-detalhe-data') %>
+<%- include('../partials/solicitacao-detail-modal') %>
+<script src="/js/solicitacoes-recebidas.js"></script>
 
 <%- include('../partials/app-shell-end') %>

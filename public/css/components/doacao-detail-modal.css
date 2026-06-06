@@ -44,7 +44,7 @@
 .doacao-detail-modal__head {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   padding-right: 32px;
 }
 
@@ -55,6 +55,12 @@
   line-height: 1.25;
 }
 
+.doacao-detail-modal__head > .home-pill {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
 .doacao-detail-modal__meta {
   display: flex;
   flex-wrap: wrap;
@@ -63,6 +69,41 @@
   font-size: var(--app-fs-sm);
   font-weight: 500;
   color: var(--muted);
+}
+
+.doacao-detail-modal__facts {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: var(--surface-green);
+}
+
+.doacao-detail-modal__fact {
+  display: grid;
+  grid-template-columns: minmax(5.5rem, auto) 1fr;
+  gap: 4px 14px;
+  align-items: baseline;
+}
+
+.doacao-detail-modal__fact-label {
+  font-size: var(--app-fs-xs);
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.doacao-detail-modal__fact-value {
+  font-size: var(--app-fs-sm);
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: 1.4;
+  min-width: 0;
+  word-break: break-word;
 }
 
 .doacao-detail-modal__note {
@@ -153,6 +194,18 @@
 
 .home-table__row--clickable {
   cursor: pointer;
+}
+
+.home-request--clickable {
+  cursor: pointer;
+}
+
+.solicitacao-detail-modal__form {
+  display: contents;
+}
+
+.solicitacao-detail-modal__form .feedback-modal__btn {
+  flex: 1;
 }
 
 @media (max-width: 1023px) {

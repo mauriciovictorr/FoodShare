@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const prisma = require('../config/database');
 const { authenticate, authorize } = require('../middlewares/authMiddleware');
+const {
+  sortSolicitacoesRecebidas,
+  buildSolicitacoesDetalheMap,
+} = require('../utils/solicitacaoDetail');
 
 function isApiRequest(req) {
   const contentType = req.headers['content-type'] || '';
@@ -229,14 +233,15 @@ router.get('/minhas', authenticate, async (req, res) => {
  */
 router.get('/recebidas', authenticate, authorize(['doador', 'admin']), async (req, res) => {
   try {
-    const solicitacoes = await prisma.solicitacao.findMany({
+    const solicitacoesRaw = await prisma.solicitacao.findMany({
       where: { doacao: { usuarioId: req.usuario.id } },
       include: {
-        doacao: { include: { itens: { take: 1, orderBy: { validade: 'asc' } } } },
+        doacao: { include: { itens: { orderBy: { validade: 'asc' } } } },
         usuario: { select: { id: true, nome: true, email: true } },
       },
-      orderBy: { createdAt: 'desc' },
     });
+    const solicitacoes = sortSolicitacoesRecebidas(solicitacoesRaw);
+    const solicitacoesDetalhe = buildSolicitacoesDetalheMap(solicitacoesRaw);
     if (isApiRequest(req)) return res.status(200).json(solicitacoes);
     return res.render('solicitacoes/recebidas', {
       title: 'Solicitações Recebidas - FoodShare',
@@ -245,6 +250,7 @@ router.get('/recebidas', authenticate, authorize(['doador', 'admin']), async (re
       pageHeadingHighlight: 'central de pedidos',
       pageSubtitle: 'Gerencie os pedidos feitos para os seus itens doados.',
       solicitacoes,
+      solicitacoesDetalhe,
     });
   } catch (err) {
     console.error('[solicitacoes] Erro ao listar recebidas:', err);

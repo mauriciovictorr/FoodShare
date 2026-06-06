@@ -241,7 +241,8 @@
     .home-panel__action:hover .app-icon,
     .home-panel__action:hover .app-svg-icon,
     .app-settings__link-row:hover .app-settings__chevron,
-    .app-notifications-list__item:hover .app-notifications-list__chevron {
+    .app-notifications-list__item:hover .app-notifications-list__chevron,
+    .app-inbox-item:hover .app-inbox-item__chevron {
       animation: iconChevronNudge 440ms var(--ease-spring);
     }
 
@@ -249,6 +250,7 @@
     .home-request:hover,
     .app-history-item:hover,
     .app-notifications-list__item:hover,
+    .app-inbox-item__main:hover,
     .app-dropdown__item:hover,
     .app-settings__link-row:hover,
     .app-profile-menu__link:hover {
