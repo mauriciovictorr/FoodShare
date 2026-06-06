@@ -25,8 +25,8 @@
           </div>
           <% var seenDoacoes = {}; %>
           <% itens.forEach(function(item) { %>
-            <div class="home-table__row">
-              <span class="home-table__item"><%= item.nome %></span>
+            <div class="home-table__row home-table__row--clickable" data-doacao-id="<%= item.doacaoId %>" role="button" tabindex="0" aria-label="Ver detalhes de <%= item.nome %>">
+              <span class="home-table__item" title="<%= item.nome %>"><%= item.nome %></span>
               <span class="home-table__qty"><%= item.quantidade %> un</span>
               <span class="home-table__date"><%= formatValidade(item.validade) %></span>
               <span class="home-pill home-pill--<%= item.displayStatus %>"><%= item.displayStatus %></span>
@@ -141,6 +141,8 @@
 
     <script src="/js/receptor-doacoes.js"></script>
   <% } %>
+
+  <%- include('../partials/doacoes-detalhe-data') %>
 </div>
 
 <%- include('../partials/app-shell-end') %>

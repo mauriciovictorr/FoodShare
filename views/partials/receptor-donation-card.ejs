@@ -8,10 +8,14 @@
   const iconName = categoryIcons[iconVariant] || 'grocery';
 %>
 <article
-  class="receptor-food-card"
+  class="receptor-food-card receptor-food-card--clickable"
   data-receptor-card
+  data-doacao-id="<%= item.doacaoId %>"
   data-category="<%= item.categoriaKey %>"
   data-search="<%= (item.nome + ' ' + item.categoria + ' ' + item.doadorNome).toLowerCase() %>"
+  role="button"
+  tabindex="0"
+  aria-label="Ver detalhes de <%= item.nome %>"
 >
   <div class="receptor-food-card__top">
     <div class="receptor-food-card__icon receptor-food-card__icon--<%= iconVariant %>" aria-hidden="true">
