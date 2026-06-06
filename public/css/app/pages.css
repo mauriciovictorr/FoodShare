@@ -182,6 +182,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--app-gap-metrics);
+  min-width: 0;
+}
+
+.receptor-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-gap-metrics);
+  min-width: 0;
 }
 
 .receptor-grid-label {
@@ -189,7 +197,6 @@
   font-size: var(--app-fs-sm);
   font-weight: 600;
   color: var(--muted);
-  text-transform: lowercase;
 }
 
 /* ── Central de pedidos (solicitações recebidas) ── */
@@ -198,13 +205,13 @@
   flex-direction: column;
   gap: 12px;
   margin-bottom: 4px;
+  min-width: 0;
 }
 
 .solicitacoes-toolbar__count {
   font-size: var(--app-fs-sm);
   font-weight: 600;
   color: var(--muted);
-  text-transform: lowercase;
 }
 
 .solicitacoes-filters {
@@ -369,7 +376,7 @@
 }
 
 .home-request--readonly {
-  align-items: flex-start;
+  align-items: center;
 }
 
 .home-request--readonly .home-pill {
@@ -378,8 +385,50 @@
   flex-shrink: 0;
 }
 
+.home-request__aside {
+  display: flex;
+  align-items: center;
+  gap: var(--app-space-xs);
+  flex-shrink: 0;
+}
+
+.home-request__aside form {
+  margin: 0;
+}
+
+.home-request__aside .home-icon-action {
+  padding: 10px;
+  min-width: var(--app-icon-action);
+  min-height: var(--app-icon-action);
+}
+
+.solicitacoes-minhas-panel {
+  min-height: auto;
+}
+
+.receptor-hero-mobile--page {
+  display: block;
+  margin-bottom: var(--app-gap-metrics);
+}
+
 .receptor-empty-panel {
   min-height: auto;
+}
+
+/* Hero de stats do receptor — só mobile, na página de solicitações */
+.receptor-hero-mobile {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .receptor-hero-mobile {
+    display: block;
+    margin-bottom: var(--app-gap-metrics);
+  }
+
+  .receptor-hero-mobile .home-hero-card--receptor {
+    border-radius: var(--radius-modal);
+  }
 }
 
 @media (min-width: 768px) {
@@ -418,7 +467,7 @@
 
 @media (max-width: 1023px) {
   .receptor-dashboard__aside {
-    order: -1;
+    display: none;
   }
 
   .home-hero-card--receptor,
@@ -431,11 +480,12 @@
   }
 
   .receptor-food-card .app-btn-primary {
-    min-height: var(--app-btn-min-h);
-    padding: var(--app-btn-py) var(--app-btn-px);
-    border-radius: var(--app-btn-radius);
-    font-size: var(--app-fs-lg);
-    font-weight: 700;
+    min-height: auto;
+    padding: 14px 26px;
+    border-radius: 14px;
+    font-size: var(--app-fs-base);
+    font-weight: 600;
+    flex-shrink: 0;
   }
 }
 @media (max-width: 1023px) {

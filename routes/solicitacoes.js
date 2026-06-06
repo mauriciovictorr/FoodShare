@@ -6,6 +6,8 @@ const {
   sortSolicitacoesRecebidas,
   buildSolicitacoesDetalheMap,
 } = require('../utils/solicitacaoDetail');
+const { getReceptorMonthStats } = require('../utils/receptorStats');
+const { mesAtual } = require('../utils/formatTime');
 
 function isApiRequest(req) {
   const contentType = req.headers['content-type'] || '';
@@ -179,13 +181,24 @@ router.post('/nova', authenticate, authorize(['receptor', 'admin']), async (req,
  */
 router.get('/minhas', authenticate, async (req, res) => {
   try {
-    const solicitacoes = await prisma.solicitacao.findMany({
-      where: { usuarioId: req.usuario.id },
-      include: {
-        doacao: { include: { itens: { take: 1, orderBy: { validade: 'asc' } } } },
-      },
-      orderBy: { createdAt: 'desc' },
-    });
+    const [solicitacoes, receptorStats] = await Promise.all([
+      prisma.solicitacao.findMany({
+        where: { usuarioId: req.usuario.id },
+        include: {
+          doacao: {
+            include: {
+              itens: { orderBy: { validade: 'asc' } },
+              usuario: { select: { nome: true } },
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      (req.usuario.role === 'receptor' || req.usuario.role === 'admin')
+        ? getReceptorMonthStats(req.usuario.id)
+        : Promise.resolve(null),
+    ]);
+    const solicitacoesDetalhe = buildSolicitacoesDetalheMap(solicitacoes, { viewerRole: 'receptor' });
     if (isApiRequest(req)) return res.status(200).json(solicitacoes);
     return res.render('solicitacoes/minhas_solicita', {
       title: 'Minhas Solicitações - FoodShare',
@@ -193,8 +206,13 @@ router.get('/minhas', authenticate, async (req, res) => {
       pageHeadingPrefix: 'Esse é seu',
       pageHeadingHighlight: 'acompanhamento',
       pageSubtitle: 'Veja o status dos alimentos que você solicitou.',
-      featurePreview: true,
       solicitacoes,
+      solicitacoesDetalhe,
+      totalSolicitadas: receptorStats?.totalSolicitadas ?? 0,
+      totalRecebidas: receptorStats?.totalRecebidas ?? 0,
+      totalPendentes: receptorStats?.totalPendentes ?? 0,
+      mesAtual: mesAtual(),
+      showReceptorHero: req.usuario.role === 'receptor' || req.usuario.role === 'admin',
     });
   } catch (err) {
     console.error('[solicitacoes] Erro ao listar minhas solicitações:', err);
