@@ -159,6 +159,13 @@
     container.appendChild(clone);
     itemCount++;
     recalcularIndices();
+
+    if (window.CustomSelect) {
+      itemDiv.querySelectorAll('select[data-custom-select]').forEach(function (select) {
+        window.CustomSelect.init(select);
+      });
+    }
+
     requestAnimationFrame(updateScrollFades);
   }
 
@@ -194,10 +201,20 @@
     });
   }
 
+  function initCustomSelects() {
+    if (!window.CustomSelect) return;
+    var form = document.getElementById('doacaoForm');
+    if (!form) return;
+    form.querySelectorAll('select[data-custom-select]').forEach(function (select) {
+      window.CustomSelect.init(select);
+    });
+  }
+
   function initItems() {
     var container = getContainer();
     if (!container) return;
     if (container.children.length === 0) populateFromOld();
+    initCustomSelects();
   }
 
   function bindEvents() {

@@ -30,7 +30,7 @@
 
       <div class="auth-field">
         <label for="doacao-edit-status" class="auth-field__label">Status do pacote</label>
-        <select id="doacao-edit-status" name="status" class="auth-field__input auth-field__select">
+        <select id="doacao-edit-status" name="status" data-custom-select class="auth-field__input auth-field__select">
           <% var currentStatus = typeof doacaoOld !== 'undefined' && doacaoOld.status ? doacaoOld.status : doacao.status; %>
           <option value="disponivel" <%= currentStatus === 'disponivel' ? 'selected' : '' %>>Disponível</option>
           <option value="reservado" <%= currentStatus === 'reservado' ? 'selected' : '' %>>Reservado</option>
@@ -51,7 +51,7 @@
         Pacote criado em <%= formatDateShort(doacao.createdAt) %>
       </p>
 
-      <div class="doacao-edit-actions">
+      <div class="doacao-edit-actions feedback-modal__actions feedback-modal__actions--form">
         <a href="/doacoes" class="feedback-modal__btn feedback-modal__btn--secondary">Cancelar</a>
         <button type="submit" class="feedback-modal__btn feedback-modal__btn--primary" id="btnSalvarEdit">
           Salvar alterações
@@ -73,7 +73,7 @@
       </div>
       <div class="auth-field">
         <label class="auth-field__label">Categoria</label>
-        <select data-name="categoria" required class="auth-field__input auth-field__select">
+        <select data-name="categoria" data-custom-select required class="auth-field__input auth-field__select">
           <option value="">Selecione...</option>
           <option value="grãos">Grãos e cereais</option>
           <option value="laticínios">Laticínios</option>
@@ -110,6 +110,7 @@ const editSeed = typeof doacaoOld !== 'undefined' ? doacaoOld : {
 };
 %>
 <script type="application/json" id="doacao-edit-old"><%- JSON.stringify(editSeed) %></script>
+<script src="/js/custom-select.js"></script>
 <script src="/js/doacao-edit.js"></script>
 
 <%- include('../partials/app-shell-end') %>

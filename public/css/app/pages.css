@@ -247,10 +247,19 @@
   padding-bottom: 0;
 }
 
+.app-history-item__info {
+  min-width: 0;
+  flex: 1;
+}
+
 .app-history-item__title {
   font-size: var(--app-fs-lg);
   font-weight: 500;
   color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: var(--truncate-list-title);
 }
 
 .app-history-item__meta {
@@ -733,11 +742,7 @@
 }
 
 .doacao-edit-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 12px;
-  padding-top: 8px;
+  padding-top: 16px;
   border-top: var(--divider);
 }
 

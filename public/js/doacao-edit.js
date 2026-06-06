@@ -59,6 +59,12 @@
     container.appendChild(clone);
     itemCount++;
     recalcularIndices();
+
+    if (window.CustomSelect) {
+      itemDiv.querySelectorAll('select[data-custom-select]').forEach(function (select) {
+        window.CustomSelect.init(select);
+      });
+    }
   }
 
   function populateFromSeed() {
@@ -113,8 +119,16 @@
     }
   }
 
+  function initCustomSelects() {
+    if (!window.CustomSelect) return;
+    document.querySelectorAll('#editarDoacaoForm select[data-custom-select]').forEach(function (select) {
+      window.CustomSelect.init(select);
+    });
+  }
+
   function init() {
     populateFromSeed();
+    initCustomSelects();
     bindEvents();
   }
 

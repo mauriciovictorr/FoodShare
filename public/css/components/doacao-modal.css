@@ -7,6 +7,22 @@
   padding-bottom: 14px;
 }
 
+/* Campos no painel branco do app — fundo distinto do container */
+.doacao-edit-form > .auth-field .auth-field__input,
+.doacao-edit-form > .auth-field .custom-select__trigger,
+.doacao-modal__body > .auth-field .auth-field__input,
+.doacao-modal__body > .auth-field .custom-select__trigger {
+  background: var(--surface-green);
+  border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+/* Campos dentro do card de item (fundo já é surface-green) */
+.doacao-modal__item .auth-field__input,
+.doacao-modal__item .custom-select__trigger {
+  background: var(--card);
+  border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+}
+
 .feedback-modal--form {
   max-width: 680px;
   align-items: stretch;
