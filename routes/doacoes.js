@@ -434,4 +434,31 @@ router.post('/:id/editar', authenticate, authorize(['doador', 'admin']), async (
   }
 });
 
+router.post('/:id/excluir', authenticate, authorize(['doador', 'admin']), async (req, res) => {
+  try {
+    const doacao = await prisma.doacao.findUnique({
+      where: { id: req.params.id },
+    });
+
+    if (!doacao) {
+      if (isApiRequest(req)) return res.status(404).json({ message: 'Doação não encontrada' });
+      return res.status(404).render('error', { statusCode: 404, context: 'doacoes_delete', error: { status: 404 } });
+    }
+
+    if (doacao.usuarioId !== req.usuario.id && req.usuario.role !== 'admin') {
+      if (isApiRequest(req)) return res.status(403).json({ message: 'Acesso negado' });
+      return res.status(403).render('error', { statusCode: 403, context: 'doacoes_delete', error: { status: 403 } });
+    }
+
+    await prisma.doacao.delete({ where: { id: req.params.id } });
+
+    if (isApiRequest(req)) return res.status(200).json({ message: 'Doação excluída com sucesso' });
+    return res.redirect('/doacoes');
+  } catch (err) {
+    console.error('[doacoes] Erro ao excluir doação:', err);
+    if (isApiRequest(req)) return res.status(500).json({ message: 'Erro interno ao excluir doação' });
+    return res.redirect('/doacoes');
+  }
+});
+
 module.exports = router;

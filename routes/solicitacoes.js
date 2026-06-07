@@ -283,11 +283,64 @@ router.get('/recebidas', authenticate, authorize(['doador', 'admin']), async (re
  */
 router.post('/:id/aceitar', authenticate, authorize(['doador', 'admin']), async (req, res) => {
   try {
-    const solicitacao = await prisma.solicitacao.update({
-      where: { id: req.params.id },
-      data: { status: 'aprovado' }
+    const result = await prisma.$transaction(async (tx) => {
+      const solicitacao = await tx.solicitacao.findUnique({
+        where: { id: req.params.id },
+        include: {
+          doacao: {
+            include: { itens: { orderBy: { validade: 'asc' } } },
+          },
+        },
+      });
+
+      if (!solicitacao) throw new Error('Solicitação não encontrada');
+      if (solicitacao.status !== 'pendente') throw new Error('Solicitação já foi processada');
+
+      if (solicitacao.doacao.usuarioId !== req.usuario.id && req.usuario.role !== 'admin') {
+        throw new Error('Acesso negado');
+      }
+
+      let quantidadeRestante = solicitacao.quantidade;
+      for (const item of solicitacao.doacao.itens) {
+        if (quantidadeRestante <= 0) break;
+        const diminuir = Math.min(item.quantidade, quantidadeRestante);
+        await tx.itemDoacao.update({
+          where: { id: item.id },
+          data: { quantidade: item.quantidade - diminuir },
+        });
+        quantidadeRestante -= diminuir;
+      }
+
+      const itensAtualizados = await tx.itemDoacao.findMany({
+        where: { doacaoId: solicitacao.doacaoId },
+      });
+      const totalRestante = itensAtualizados.reduce((sum, item) => sum + item.quantidade, 0);
+
+      if (totalRestante <= 0) {
+        await tx.doacao.update({
+          where: { id: solicitacao.doacaoId },
+          data: { status: 'entregue' },
+        });
+
+        await tx.solicitacao.updateMany({
+          where: {
+            doacaoId: solicitacao.doacaoId,
+            id: { not: solicitacao.id },
+            status: 'pendente',
+          },
+          data: { status: 'recusado' },
+        });
+      }
+
+      const solicitacaoAtualizada = await tx.solicitacao.update({
+        where: { id: req.params.id },
+        data: { status: 'aprovado' },
+      });
+
+      return solicitacaoAtualizada;
     });
-    if (isApiRequest(req)) return res.status(200).json({ message: 'Solicitação aceita com sucesso', solicitacao });
+
+    if (isApiRequest(req)) return res.status(200).json({ message: 'Solicitação aceita com sucesso', solicitacao: result });
     return res.redirect('back');
   } catch (err) {
     console.error('[solicitacoes] Erro ao aceitar:', err);

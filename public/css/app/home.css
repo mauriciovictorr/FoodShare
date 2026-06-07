@@ -541,6 +541,34 @@ button.home-empty-state__btn {
   text-decoration: underline;
 }
 
+.home-table__delete-form {
+  display: inline-flex;
+  margin: 0;
+}
+
+.home-table__delete-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--red-text);
+  cursor: pointer;
+  transition: background var(--duration-normal) var(--ease-out);
+}
+
+.home-table__delete-btn:hover {
+  background: var(--red-pale);
+}
+
+.home-table__action {
+  gap: 6px;
+}
+
 .home-table .home-pill {
   justify-self: stretch;
   width: 100%;
