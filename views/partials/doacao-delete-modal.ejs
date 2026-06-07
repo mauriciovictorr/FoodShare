@@ -1,0 +1,31 @@
+<div
+  class="feedback-modal-overlay"
+  id="doacao-delete-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="doacao-delete-title"
+  aria-describedby="doacao-delete-description"
+  aria-hidden="true"
+>
+  <div class="feedback-modal feedback-modal--confirm doacao-delete-modal">
+    <div class="feedback-modal__icon-wrap feedback-modal__icon-wrap--danger">
+      <%- include('../partials/app-icon', { icon: 'delete', size: 'empty', className: 'doacao-delete-modal__icon' }) %>
+    </div>
+
+    <div class="feedback-modal__content">
+      <h3 id="doacao-delete-title" class="feedback-modal__title">Excluir doação?</h3>
+      <p id="doacao-delete-description" class="feedback-modal__description" data-doacao-delete-description>
+        Tem certeza que deseja excluir esta doação? Esta ação não pode ser desfeita.
+      </p>
+    </div>
+
+    <div class="feedback-modal__actions">
+      <button type="button" class="feedback-modal__btn feedback-modal__btn--secondary" data-doacao-delete-close>
+        Cancelar
+      </button>
+      <form method="POST" action="" class="doacao-delete-modal__form" data-doacao-delete-form>
+        <button type="submit" class="feedback-modal__btn feedback-modal__btn--danger">Excluir</button>
+      </form>
+    </div>
+  </div>
+</div>

@@ -63,6 +63,15 @@ body.feedback-modal-open {
   background: #faeeda;
 }
 
+.feedback-modal__icon-wrap--confirm {
+  background: var(--amber-pale);
+}
+
+.feedback-modal__icon-wrap--danger {
+  background: var(--red-pale);
+  color: var(--red-text);
+}
+
 .feedback-modal-overlay.is-open .feedback-modal--error .feedback-modal__icon-wrap {
   animation: feedbackIconShake 0.75s cubic-bezier(0.36, 0, 0.2, 1) 0.35s 1 both;
 }
@@ -160,6 +169,34 @@ body.feedback-modal-open {
   flex: 1;
 }
 
+.doacao-delete-modal__form {
+  display: flex;
+  min-width: 0;
+  margin: 0;
+}
+
+.doacao-delete-modal__form .feedback-modal__btn {
+  width: 100%;
+}
+
+.doacao-delete-modal .feedback-modal__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.doacao-delete-modal .feedback-modal__actions .feedback-modal__btn {
+  width: 100%;
+  min-height: 48px;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  font-size: var(--app-fs-md);
+}
+
+.doacao-delete-modal__icon {
+  font-size: 28px;
+}
+
 .feedback-modal__btn {
   flex: 1;
 }
@@ -198,6 +235,14 @@ a.feedback-modal__btn {
 
   .feedback-modal__actions {
     gap: 12px;
+  }
+
+  .doacao-delete-modal .feedback-modal__actions .feedback-modal__btn {
+    min-height: 60px;
+    padding: 18px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 20px;
   }
 }
 

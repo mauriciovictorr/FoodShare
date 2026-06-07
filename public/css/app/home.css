@@ -525,28 +525,7 @@ button.home-empty-state__btn {
   justify-self: center;
 }
 
-.home-table__edit {
-  font-size: var(--app-fs-sm);
-  font-weight: 500;
-  color: var(--green-mid);
-  text-decoration: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0;
-  text-align: center;
-}
-
-.home-table__edit:hover {
-  text-decoration: underline;
-}
-
-.home-table__delete-form {
-  display: inline-flex;
-  margin: 0;
-}
-
-.home-table__delete-btn {
+.home-table__icon-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -556,12 +535,25 @@ button.home-empty-state__btn {
   border: none;
   border-radius: var(--radius-sm);
   background: transparent;
-  color: var(--red-text);
   cursor: pointer;
   transition: background var(--duration-normal) var(--ease-out);
+  text-decoration: none;
+  flex-shrink: 0;
 }
 
-.home-table__delete-btn:hover {
+.home-table__icon-btn--edit {
+  color: var(--green-mid);
+}
+
+.home-table__icon-btn--edit:hover {
+  background: var(--green-pale);
+}
+
+.home-table__icon-btn--delete {
+  color: var(--red-text);
+}
+
+.home-table__icon-btn--delete:hover {
   background: var(--red-pale);
 }
 

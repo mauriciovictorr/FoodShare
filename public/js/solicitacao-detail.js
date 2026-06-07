@@ -228,7 +228,7 @@
       filterChipAttr: 'data-solicitacao-filter',
       countOne: ' pedido',
       countMany: ' pedidos',
-      ignoreClickSelector: 'a, button, input, select, textarea, label, form, .home-table__edit, .home-table__action',
+      ignoreClickSelector: 'a, button, input, select, textarea, label, form, .home-table__icon-btn, .home-table__action',
       buildBody: function (detail) {
         var badges = [
           { key: detail.statusKey, label: detail.statusLabel },

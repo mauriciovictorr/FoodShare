@@ -55,7 +55,12 @@
         '<button type="button" class="feedback-modal__btn feedback-modal__btn--primary" data-solicitacao-open="' + render.escapeHtml(detail.id) + '">Solicitar</button>';
     } else if (detail.editarUrl) {
       actionsHtml +=
-        '<a href="' + render.escapeHtml(detail.editarUrl) + '" class="feedback-modal__btn feedback-modal__btn--primary feedback-modal__btn--link">Editar doação</a>';
+        '<a href="' + render.escapeHtml(detail.editarUrl) + '" class="feedback-modal__btn feedback-modal__btn--secondary feedback-modal__btn--link">Editar</a>' +
+        '<button type="button" class="feedback-modal__btn feedback-modal__btn--danger" data-doacao-delete-open="' +
+          render.escapeHtml(detail.id) +
+          '" data-doacao-delete-label="' +
+          render.escapeHtml(detail.title) +
+          '">Excluir</button>';
     }
 
     actionsEl.innerHTML = actionsHtml;
@@ -98,7 +103,7 @@
 
   function shouldIgnoreClick(target) {
     return Boolean(
-      target.closest('a, button, input, select, textarea, label, form, .home-table__edit, .receptor-food-card .app-btn-primary, [data-solicitacao-open]')
+      target.closest('a, button, input, select, textarea, label, form, .home-table__icon-btn, .receptor-food-card .app-btn-primary, [data-solicitacao-open], [data-doacao-delete-open]')
     );
   }
 

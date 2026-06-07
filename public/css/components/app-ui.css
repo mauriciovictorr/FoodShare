@@ -95,7 +95,7 @@ a.home-hero-card__btn {
 
 @media (hover: hover) {
   .feedback-modal__btn--danger:hover {
-    background: color-mix(in srgb, var(--red-pale) 80%, var(--red-text));
+    background: var(--red-text);
     color: #fff;
   }
 }
