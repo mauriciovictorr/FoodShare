@@ -286,6 +286,42 @@
     loadCatalog();
     if (document.querySelector('.solicitacoes-minhas-page')) initMode('minhas');
     if (document.querySelector('[data-solicitacoes-list]')) initMode('recebidas');
+
+    document.addEventListener('submit', function (event) {
+      var form = event.target;
+      if (!form || !form.action) return;
+      if (form.action.indexOf('/aceitar') === -1) return;
+
+      event.preventDefault();
+
+      var btn = form.querySelector('button[type="submit"]');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Aceitando...';
+      }
+
+      fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: '{}',
+      })
+        .then(function (response) {
+          if (response.ok) {
+            if (window.Confetti) window.Confetti.launch();
+            setTimeout(function () {
+              window.location.reload();
+            }, 1500);
+          } else {
+            window.location.reload();
+          }
+        })
+        .catch(function () {
+          window.location.reload();
+        });
+    });
   }
 
   if (document.readyState === 'loading') {

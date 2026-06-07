@@ -248,6 +248,50 @@
         adicionarItem();
       });
     }
+
+    var doacaoForm = document.getElementById('doacaoForm');
+    if (doacaoForm) {
+      doacaoForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        var submitBtn = doacaoForm.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Publicando...';
+        }
+
+        var formData = new URLSearchParams(new FormData(doacaoForm));
+
+        fetch(doacaoForm.action, {
+          method: 'POST',
+          redirect: 'manual',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: formData.toString(),
+        })
+          .then(function (response) {
+            if (response.ok || response.status === 201 || response.status === 0 || response.type === 'opaqueredirect') {
+              close();
+              if (window.Confetti) window.Confetti.launch();
+              setTimeout(function () {
+                window.location.reload();
+              }, 1800);
+            } else {
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Publicar doação';
+              }
+            }
+          })
+          .catch(function () {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Publicar doação';
+            }
+          });
+      });
+    }
   }
 
   function initAutoOpen() {
