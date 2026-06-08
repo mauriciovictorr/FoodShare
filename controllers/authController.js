@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const prisma = require('../config/database');
+const { createSupabaseClient } = require('../config/supabase');
 const { registerSchema, loginSchema } = require('../validators/authValidator');
 
 const SALT_ROUNDS = 12;
@@ -208,4 +210,148 @@ async function logout(req, res) {
   res.redirect('/');
 }
 
-module.exports = { showWelcome, showRegister, register, showLogin, login, refresh, logout };
+// GET /auth/google
+async function loginGoogle(req, res) {
+  const supabase = createSupabaseClient(req, res);
+  if (!supabase) {
+    return res.status(500).send('Supabase não configurado');
+  }
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${req.protocol}://${req.get('host')}/auth/callback`,
+    },
+  });
+  if (error) {
+    console.error('[loginGoogle] Erro:', error);
+    return res.status(500).send('Erro ao conectar com Google');
+  }
+  res.redirect(data.url);
+}
+
+// GET /auth/callback
+async function googleCallback(req, res) {
+  const { code } = req.query;
+  if (!code) {
+    return res.redirect('/auth/login?error=Nenhum código recebido do Google');
+  }
+
+  const supabase = createSupabaseClient(req, res);
+  if (!supabase) {
+    return res.status(500).send('Supabase não configurado');
+  }
+
+  try {
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error) throw error;
+
+    const user = data.user;
+    const email = user.email;
+    const nome = user.user_metadata?.full_name || 'Usuário do Google';
+
+    const usuario = await prisma.usuario.findUnique({ where: { email } });
+
+    if (usuario) {
+      const payload = { id: usuario.id, nome: usuario.nome, email: usuario.email, role: usuario.role };
+      const accessToken = generateAccessToken(payload);
+      const refreshToken = generateRefreshToken({ id: usuario.id });
+
+      await prisma.refreshToken.create({
+        data: {
+          token: refreshToken,
+          usuarioId: usuario.id,
+          expiresAt: new Date(Date.now() + REFRESH_TOKEN_EXPIRY_MS),
+        },
+      });
+
+      setCookies(res, accessToken, refreshToken);
+      return res.redirect('/');
+    } else {
+      const tempToken = jwt.sign({ email, nome }, process.env.JWT_SECRET, { expiresIn: '15m' });
+      res.cookie('tempGoogleAuth', tempToken, { httpOnly: true, maxAge: 15 * 60 * 1000 });
+      return res.redirect('/auth/google/complete');
+    }
+  } catch (err) {
+    console.error('[googleCallback] Erro:', err);
+    res.redirect('/auth/login?error=Falha na autenticação com o Google');
+  }
+}
+
+// GET /auth/google/complete
+async function showCompleteGoogle(req, res) {
+  const tempToken = req.cookies?.tempGoogleAuth;
+  if (!tempToken) {
+    return res.redirect('/auth/login');
+  }
+
+  try {
+    const decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+    res.render('auth/complete-google', { title: 'Completar Cadastro - FoodShare', email: decoded.email, nome: decoded.nome, errors: [] });
+  } catch (err) {
+    return res.redirect('/auth/login');
+  }
+}
+
+// POST /auth/google/complete
+async function completeGoogle(req, res) {
+  const tempToken = req.cookies?.tempGoogleAuth;
+  if (!tempToken) {
+    return res.redirect('/auth/login');
+  }
+
+  try {
+    const decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+    const { email, nome } = decoded;
+    const { telefone, role } = req.body;
+
+    if (!telefone || !role || !['doador', 'receptor'].includes(role)) {
+      return res.render('auth/complete-google', { 
+        title: 'Completar Cadastro - FoodShare', 
+        email, 
+        nome, 
+        errors: [{ message: 'Preencha todos os campos corretamente.' }] 
+      });
+    }
+
+    const randomPassword = crypto.randomUUID();
+    const senhaHash = await bcrypt.hash(randomPassword, SALT_ROUNDS);
+
+    const novoUsuario = await prisma.usuario.create({
+      data: { nome, email, senha: senhaHash, telefone, role },
+    });
+
+    res.clearCookie('tempGoogleAuth');
+
+    const payload = { id: novoUsuario.id, nome: novoUsuario.nome, email: novoUsuario.email, role: novoUsuario.role };
+    const accessToken = generateAccessToken(payload);
+    const refreshToken = generateRefreshToken({ id: novoUsuario.id });
+
+    await prisma.refreshToken.create({
+      data: {
+        token: refreshToken,
+        usuarioId: novoUsuario.id,
+        expiresAt: new Date(Date.now() + REFRESH_TOKEN_EXPIRY_MS),
+      },
+    });
+
+    setCookies(res, accessToken, refreshToken);
+    res.redirect('/');
+  } catch (err) {
+    console.error('[completeGoogle] Erro:', err);
+    res.redirect('/auth/login');
+  }
+}
+
+module.exports = { 
+  showWelcome, 
+  showRegister, 
+  register, 
+  showLogin, 
+  login, 
+  refresh, 
+  logout,
+  loginGoogle,
+  googleCallback,
+  showCompleteGoogle,
+  completeGoogle
+};

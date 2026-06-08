@@ -1,0 +1,59 @@
+<%- include('../partials/auth-header') %>
+<div class="auth-screen auth-screen--form auth-screen--register">
+  <%- include('../partials/auth-hero') %>
+
+  <section class="auth-panel auth-panel--register">
+    <div class="auth-panel__inner">
+      <header class="auth-panel__header">
+        <p class="auth-panel__greeting">Quase lá, <%= nome %>!</p>
+        <h2 class="auth-panel__title">Complete seu Cadastro</h2>
+        <p style="margin-top: 10px; color: var(--text-muted); font-size: 0.9em;">
+          Para usar o FoodShare, precisamos de apenas mais duas informações.
+        </p>
+      </header>
+
+      <form action="/auth/google/complete" method="POST" class="auth-form" novalidate>
+        <div class="auth-form__fields">
+          
+          <div class="auth-field">
+            <label for="telefone" class="auth-field__label">Telefone (WhatsApp):</label>
+            <input
+              type="tel"
+              id="telefone"
+              maxlength="15"
+              inputmode="numeric"
+              autocomplete="tel"
+              placeholder="(82) 91234-5678"
+              class="auth-field__input<%= typeof errors !== 'undefined' && errors.some(e => e.field === 'telefone') ? ' auth-field__input--error' : '' %>"
+              required
+              autofocus
+            />
+            <input type="hidden" name="telefone" id="telefone-value" value="" />
+          </div>
+
+          <div class="auth-field">
+            <label for="role" class="auth-field__label">Participar como:</label>
+            <select
+              id="role"
+              name="role"
+              data-custom-select
+              class="auth-field__input auth-field__select<%= typeof errors !== 'undefined' && errors.some(e => e.field === 'role') ? ' auth-field__input--error' : '' %>"
+              required
+            >
+              <option value="" disabled selected>Selecione seu perfil</option>
+              <option value="doador">Doador</option>
+              <option value="receptor">Receptor</option>
+            </select>
+          </div>
+
+        </div>
+
+        <button type="submit" class="auth-btn auth-btn--mobile">
+          Finalizar Cadastro
+        </button>
+      </form>
+    </div>
+  </section>
+</div>
+
+<%- include('../partials/auth-footer') %>
