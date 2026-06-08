@@ -8,6 +8,10 @@ const {
   login,
   refresh,
   logout,
+  loginGoogle,
+  googleCallback,
+  showCompleteGoogle,
+  completeGoogle,
 } = require('../controllers/authController');
 
 router.get('/', showWelcome);
@@ -191,5 +195,11 @@ router.post('/refresh', refresh);
  *                   example: "Logout realizado com sucesso"
  */
 router.post('/logout', logout);
+
+// Rotas do Google OAuth
+router.get('/google', loginGoogle);
+router.get('/callback', googleCallback);
+router.get('/google/complete', showCompleteGoogle);
+router.post('/google/complete', completeGoogle);
 
 module.exports = router;
