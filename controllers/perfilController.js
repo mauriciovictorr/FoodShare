@@ -85,3 +85,41 @@ exports.deletePost = async (req, res) => {
     res.status(500).render('error', { statusCode: 500 });
   }
 };
+
+exports.uploadAvatar = async (req, res) => {
+  try {
+    const usuarioId = res.locals.usuario.id;
+
+    if (!req.file) {
+      return res.redirect('/perfil'); // Pode adicionar flash message de erro depois
+    }
+
+    // Caminho que será salvo no banco de dados e acessado pelo frontend
+    const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+
+    await prisma.usuario.update({
+      where: { id: usuarioId },
+      data: { avatar: avatarUrl }
+    });
+
+    // Atualiza o avatar no locals provisoriamente, se necessário, ou a aplicação pegará no próximo request.
+    // O ideal seria atualizar o JWT, mas para simplificar, apenas atualizamos no DB e quem usa o JWT precisará relogar 
+    // ou pegar do banco. O correto aqui para refletir no Header é atualizar o cookie do JWT, já que app.js lê do JWT.
+    // Como app.js (req, res, next) seta locals.usuario com jwt.verify, não atualizar o token não vai atualizar na tela se a tela usar locals.usuario.avatar.
+    // Para resolver isso, vamos gerar um novo token e setar o cookie, ou ler o avatar no showPerfil.
+    // O mais seguro é gerar novo token:
+    const jwt = require('jsonwebtoken');
+    const usuarioAtualizado = await prisma.usuario.findUnique({ where: { id: usuarioId } });
+    
+    // Removendo senha para o payload
+    const { senha, ...usuarioPayload } = usuarioAtualizado;
+    
+    const token = jwt.sign(usuarioPayload, process.env.JWT_SECRET, { expiresIn: '7d' });
+    res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
+
+    res.redirect('/perfil');
+  } catch (error) {
+    console.error('[PerfilController] Erro ao fazer upload do avatar:', error);
+    res.status(500).render('error', { statusCode: 500 });
+  }
+};

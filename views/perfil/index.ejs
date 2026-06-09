@@ -5,8 +5,22 @@
       
       <!-- Cabeçalho do Perfil -->
       <section class="perfil-hero">
-        <div class="perfil-hero__avatar">
-          <span><%= locals.usuario.nome.charAt(0).toUpperCase() %></span>
+        <div class="perfil-hero__avatar-wrapper" style="position: relative; z-index: 1;">
+          <form id="avatarForm" action="/perfil/avatar" method="POST" enctype="multipart/form-data">
+            <label for="avatarInput" class="perfil-hero__avatar" style="cursor: pointer; overflow: hidden; position: relative; margin: 0;">
+              <% if (locals.usuario.avatar) { %>
+                <img src="<%= locals.usuario.avatar %>" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;" />
+              <% } else { %>
+                <span><%= locals.usuario.nome.charAt(0).toUpperCase() %></span>
+              <% } %>
+              <div class="avatar-overlay">
+                <span style="display: flex; align-items: center; gap: 0.4rem;">
+                  <span class="material-symbols-rounded" style="font-size: 1.2rem;">add_a_photo</span> Alterar
+                </span>
+              </div>
+            </label>
+            <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display: none;" onchange="if(this.files[0].size > 2 * 1024 * 1024){ alert('A imagem deve ter no máximo 2MB'); this.value = ''; } else { document.getElementById('avatarForm').submit(); }" />
+          </form>
         </div>
         <div class="perfil-hero__info">
           <h1 class="perfil-hero__name"><%= locals.usuario.nome %></h1>
@@ -156,13 +170,24 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 15px 35px -5px rgba(16, 185, 129, 0.4);
-    transform: rotate(-5deg);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 1;
   }
 
-  .perfil-hero:hover .perfil-hero__avatar {
-    transform: rotate(0) scale(1.05);
+  .avatar-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .perfil-hero__avatar:hover .avatar-overlay {
+    opacity: 1;
   }
 
   .perfil-hero__info {
